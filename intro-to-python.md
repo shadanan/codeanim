@@ -37,19 +37,29 @@ Notice that we used quotes to surround our Hello World. This is known as a strin
 To run our script, we click the play button up here. And then down in the terminal, we can see that Hello World was printed out. Great!
 
 ```vscanim
-vscanim.run()
+run()
 ```
 
 Expressions
 This code that we wrote on line 3 is called an expression. Let's write an expression that prints out the result of adding 2 + 2.
-print(2 + 2)
 
 The syntax is:
-Print
-Open parens
-2 + 2
+
+```vscanim
+clear_canvas()
+type("print", return_after=False)
+type("(", return_after=False)
+type("2 + 2")
+```
+
 Notice how we used a plus sign here. This is known as the addition operator.
-Now, when we click the play button again, we see that 4 was printed out. Great!
+
+```vscanim
+run()
+```
+
+Now, when we run the script again, we see that 4 was printed out. Great!
+
 Variables and the Assignment Operator
 Now, let's say that we want to reuse our 2 + 2 expression. We can do this by assigning the result of the expression to a variable, and then print out the result.
 result = 2 + 2
