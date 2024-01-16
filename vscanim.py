@@ -2,6 +2,16 @@
 import argparse
 import subprocess
 import time
+from dataclasses import dataclass
+from enum import Enum
+
+
+def delay(seconds: float = 1):
+    time.sleep(seconds)
+
+
+def escape(text: str):
+    return text.replace('"', '\\"')
 
 
 def osascript(cmd: str):
@@ -12,125 +22,144 @@ def activate(app: str):
     osascript(f'tell application "{app}" to activate')
 
 
-def clear_canvas(*, do_clear_terminal: bool = True, final_delay: bool = True):
-    if do_clear_terminal:
-        clear_terminal()
-    jump(line=3)
-    osascript(
-        'tell application "System Events" to key code 125 using {command down, shift down}'
-    )
-    backspace()
-    if final_delay:
-        delay()
-
-
 def activate_vscode():
     activate("Visual Studio Code")
-    activate_editor()
 
 
-def activate_terminal():
-    osascript('tell application "System Events" to keystroke "`" using {control down}')
+class KeyCode(Enum):
+    ONE = 18
+    RETURN = 36
+    BACKSPACE = 51
+    ESCAPE = 53
+    LEFT = 123
+    RIGHT = 124
+    DOWN = 125
+    UP = 126
 
 
-def activate_editor():
-    osascript('tell application "System Events" to key code 18 using {control down}')
+class Modifier(Enum):
+    COMMAND = "command down"
+    SHIFT = "shift down"
+    OPTION = "option down"
+    CONTROL = "control down"
 
 
-def clear_terminal():
-    activate_terminal()
-    osascript('tell application "System Events" to keystroke "k" using {command down}')
-    activate_editor()
+@dataclass
+class KeyStroke:
+    code: KeyCode | str
+    modifiers: list[Modifier] | None = None
+
+    def __str__(self) -> str:
+        cmd = []
+        if isinstance(self.code, KeyCode):
+            cmd += ["key code", str(self.code.value)]
+        else:
+            cmd += ["keystroke", f'"{escape(self.code)}"']
+        if self.modifiers is not None:
+            cmd += ["using", "{", ", ".join([m.value for m in self.modifiers]), "}"]
+        return " ".join(cmd)
+
+
+def command(cmd: str):
+    return [
+        KeyStroke("p", modifiers=[Modifier.COMMAND]),
+        KeyStroke(cmd),
+        KeyStroke(KeyCode.RETURN),
+    ]
+
+
+def repeat(lines: list[KeyStroke], num: int):
+    return [f"repeat {num} times"] + lines + ["end repeat"]
+
+
+def send(lines: list[KeyStroke] | list[str] | list[KeyStroke | str]):
+    cmd = ['tell application "System Events"'] + [str(l) for l in lines] + ["end tell"]
+    osascript("\n".join(cmd))
 
 
 def newline():
-    osascript(
-        'tell application "System Events" to keystroke return using {command down}'
-    )
-
-
-def delay(seconds: float = 1):
-    time.sleep(seconds)
-
-
-def end():
-    osascript('tell application "System Events" to key code 124 using {command down}')
-
-
-def bottom():
-    osascript('tell application "System Events" to key code 125 using {command down}')
-
-
-def backspace(num: int = 1):
-    osascript(
-        f"""
-        repeat {num} times
-            tell application "System Events" to key code 51
-        end repeat
-        """
-    )
-
-
-def jump(*, line: int, col: int = 1):
-    osascript(
-        f"""
-        tell application "System Events"
-            keystroke "p" using {{command down}}
-            keystroke ":{line},{col}"
-            keystroke return
-        end tell
-        """
-    )
-
-
-def move(*, lines: int = 0, cols: int = 0):
-    if lines < 0:
-        osascript(
-            f"""
-            repeat {-lines} times
-                tell application "System Events" to key code 126
-            end repeat
-            """
-        )
-    elif lines > 0:
-        osascript(
-            f"""
-            repeat {lines} times
-                tell application "System Events" to key code 125
-            end repeat
-            """
-        )
-
-    if cols < 0:
-        osascript(
-            f"""
-            repeat {-cols} times
-                tell application "System Events" to key code 123
-            end repeat
-            """
-        )
-    elif cols > 0:
-        osascript(
-            f"""
-            repeat {cols} times
-                tell application "System Events" to key code 124
-            end repeat
-            """
-        )
+    send([KeyStroke(KeyCode.RETURN, modifiers=[Modifier.COMMAND])])
 
 
 def type(text: str, *, return_after: bool = True, final_delay: bool = True):
-    escaped_text = text.replace('"', '\\"')
-    osascript(f'tell application "System Events" to keystroke "{escaped_text}"')
+    send([KeyStroke(text)])
     if return_after:
         newline()
     if final_delay:
         delay()
 
 
+def backspace(num: int = 1):
+    send(repeat([KeyStroke(KeyCode.BACKSPACE)], num))
+
+
+def jump(*, line: int, col: int = 1):
+    send(command(f":{line},{col}"))
+
+
+def end():
+    send([KeyStroke(KeyCode.RIGHT, modifiers=[Modifier.COMMAND])])
+
+
+def bottom():
+    send([KeyStroke(KeyCode.DOWN, modifiers=[Modifier.COMMAND])])
+
+
+def move(*, lines: int = 0, cols: int = 0):
+    if lines < 0:
+        send(repeat([KeyStroke(KeyCode.UP)], -lines))
+    elif lines > 0:
+        send(repeat([KeyStroke(KeyCode.DOWN)], lines))
+
+    if cols < 0:
+        send(repeat([KeyStroke(KeyCode.LEFT)], -cols))
+    elif cols > 0:
+        send(repeat([KeyStroke(KeyCode.RIGHT)], cols))
+
+
+def focus_terminal():
+    send([KeyStroke("`", modifiers=[Modifier.CONTROL])])
+
+
+def focus_editor():
+    send([KeyStroke(KeyCode.ONE, modifiers=[Modifier.CONTROL])])
+
+
+def clear_terminal():
+    focus_terminal()
+    send([KeyStroke("k", modifiers=[Modifier.COMMAND])])
+    focus_editor()
+
+
+def clear_below(line: int):
+    jump(line=line)
+    send([KeyStroke(KeyCode.DOWN, modifiers=[Modifier.COMMAND, Modifier.SHIFT])])
+    backspace()
+
+
+def clear_canvas(
+    *, line: int = 2, do_clear_terminal: bool = True, final_delay: bool = True
+):
+    if do_clear_terminal:
+        clear_terminal()
+    clear_below(line)
+    if final_delay:
+        delay()
+
+
 def run(final_delay: bool = True):
-    osascript(
-        'tell application "System Events" to keystroke return using {command down, shift down, option down, control down}'
+    send(
+        [
+            KeyStroke(
+                KeyCode.RETURN,
+                modifiers=[
+                    Modifier.COMMAND,
+                    Modifier.SHIFT,
+                    Modifier.OPTION,
+                    Modifier.CONTROL,
+                ],
+            )
+        ]
     )
     if final_delay:
         delay()

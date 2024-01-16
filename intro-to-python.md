@@ -18,14 +18,9 @@ Now, let's do what every programmer does when writing code for the first time! L
 
 To do this, we will use the print function.
 
-```python
-print("Hello, world!")
-```
-
 The syntax is:
 
 ```vscanim
-newline()
 type("print", return_after=False)
 type("(", return_after=False)
 type('"', return_after=False)
@@ -40,8 +35,9 @@ To run our script, we click the play button up here. And then down in the termin
 run()
 ```
 
-Expressions
-This code that we wrote on line 3 is called an expression. Let's write an expression that prints out the result of adding 2 + 2.
+# Expressions
+
+This code that we wrote on line 2 is called an expression. Let's write an expression that prints out the result of adding 2 + 2.
 
 The syntax is:
 
@@ -60,117 +56,280 @@ run()
 
 Now, when we run the script again, we see that 4 was printed out. Great!
 
-Variables and the Assignment Operator
+# Variables and the Assignment Operator
+
 Now, let's say that we want to reuse our 2 + 2 expression. We can do this by assigning the result of the expression to a variable, and then print out the result.
-result = 2 + 2
-print(result)
 
-So:
-We create a new variable result
-And assign it to 2 + 2
-The equal sign here is called the assignment operator.
+```vscanim
+move(lines=-2)
+newline()
+type("result", return_after=False)
+```
+
+So, we create a new variable called result
+
+```vscanim
+type(" = 2 + 2", return_after=False)
+```
+
+And assign it to 2 + 2. The equal sign here is called the assignment operator.
+
+```vscanim
+move(lines=1, cols=-1)
+backspace(5)
+type("result")
+```
+
 And then we print out the variable to see its value.
+
+```vscanim
+run()
+```
+
 Run the script and we see that 4 was printed out.
+
 You know, it would be clearer if we also printed out the name of the variable. We can do this by passing an additional item separated by a comma.
-print("result", result)
 
-So:
-We add quote
-Result
-Then a comma
-Notice in this expression that the first argument is a string, because it has quotes around it. And the second value is the variable result, which we created on line 5.
+```vscanim
+jump(line=3, col=7)
+type('""', return_after=False)
+move(cols=-1)
+```
+
+So, we add a quote,
+
+```vscanim
+type("result", return_after=False)
+```
+
+Then result,
+
+```vscanim
+move(cols=1)
+type(", ")
+```
+
+Then a comma to separate the arguments.
+
+Notice in this expression that the first argument is a string, because it has quotes around it. And the second value is the variable result, which we created on line 4.
+
+```vscanim
+run()
+```
+
 Run, and now we have the name of the variable being printed out.
-Exercise
-Alright, time for an exercise. Create a variable called city, and assign it to a string that is the city you currently live in. Then print, "I live in [city]". Pause the video and give it a try!
-Okay, here's the solution.
-Create a variable called city
-Set it equal to Seattle
-Then Print
-Parens
-Quote
-I live in
-Comma
-City
-Run, and we get I live in Seattle.
-Accumulations
-A frequently used operator is the += operator, sometimes called the addition assignment operator. Here's an example:
-result += 3
 
-Result
-+=
+# Exercise
+
+Alright, time for an exercise. Create a variable called city, and assign it to a string that is the city you currently live in. Then print, "I live in [city]". Pause the video and give it a try!
+
+Okay, here's the solution.
+
+```vscanim
+newline()
+type("city", return_after=False)
+```
+
+Create a variable called city
+
+```vscanim
+type(' = "Vancouver"')
+```
+
+Set it equal to Vancouver
+
+```vscanim
+type("print", return_after=False)
+type("(", return_after=False)
+type('"I live in"', return_after=False)
+type(", ", return_after=False)
+type("city")
+```
+
+Then print, parens, quote, I live in, comma, city.
+
+```vscanim
+run()
+```
+
+Run, and we get I live in Vancouver.
+
+```vscanim
+clear_canvas(line=5)
+```
+
+# Accumulations
+
+A frequently used operator is the `+=` operator, sometimes called the addition assignment operator. Here's an example:
+
+```vscanim
+type("result", return_after=False)
+```
+
+Result,
+
+```vscanim
+type(" += ", return_after=False)
+```
+
+Plus-equals,
+
+```vscanim
+type("3")
+```
+
 3
-This operator takes the previous value of a variable, adds the value on the right hand side, and reassigns it back to the variable. In this case, it takes result, which currently has the value 4, adds 3 to it, which gives 7, and reassigns the value back to result.
-Running the program, we can see that result is now 7.
-Other Operators
+
+This operator:
+
+- Takes the previous value of a variable,
+- Adds the value on the right hand side,
+- And reassigns it back to the variable.
+
+In this case, it takes result, which currently has the value 4, adds 3 to it, which gives 7, and reassigns the value back to result.
+
+```vscanim
+type("print(result)")
+```
+
+Let's print result.
+
+```vscanim
+run()
+```
+
+And, running the program, we can see that result is now 7.
+
+# Other Operators
+
 In addition to the assignment and addition operators, there are other basic arithmetic operators such as subtraction, multiplication, division, and exponentiation. Let's take a quick look at each of these.
+
 To subtract, use the minus operator:
-print(5 - 3)
+
+```vscanim
+clear_canvas()
+type("print(5 - 3)")
+run()
+```
 
 So, 5 minus 3 equals 2
+
+```vscanim
+clear_canvas()
+type("print(3 * 3)")
+run()
+```
+
 To multiply, use the asterisk operator:
 print(3 \* 3)
 
 So, 3 times 3 equals 9
+
 Division is interesting in Python. There are two division operators. One does regular division:
-print(10 / 3)
+
+```vscanim
+clear_canvas()
+type("print(10 / 3)")
+run()
+```
 
 So, 10 divided by 3 equals 3.3 repeating.
+
 And, the other does integer division:
-print(10 // 3)
+
+```vscanim
+clear_canvas()
+type("print(10 // 3)")
+run()
+```
 
 So, in this case 10 divided by 3 is just equal to 3. Basically, integer division is the floor of normal division.
+
 Related to the division operator is the modulo operator. This operator returns the remainder of a division:
-print(10 % 3)
+
+```vscanim
+clear_canvas()
+type("print(10 % 3)")
+run()
+```
 
 So, 10 modulo 3 equals 1 because when you divide 10 by 3 you get a remainder of 1.
-To exponentiate, use the double asterisk operator.
-print(5 \*\* 3)
+
+To exponentiate, use the double asterisk operator:
+
+```vscanim
+clear_canvas()
+type("print(5**3)")
+run()
+```
 
 So, here is 5 cubed which is 125.
-Exercise
+
+# Exercise
+
 Okay, now for an interesting exercise. Let's use Python to find the roots of the following equation:
+
 x^2 - 8x + 12 = 0
-To refresh your memory, the roots of an equation are the values of x where the function is equal to zero. For quadratic equations, we can find the roots using the quadratic formula which is -b +- sqrt(b^2 - 4ac) / 2a. Print out the two roots! Pause the video and give it a try. By the way, you can get the square root by raising a value to the power of 0.5.
-a = 1
-b = -8
-c = 12
-x1 = (-b + (b**2 - 4 _ a _ c) ** 0.5) / (2 _ a)
-x2 = (-b - (b\*\*2 - 4 _ a _ c) \*\* 0.5) / (2 _ a)
-print("x1:", x1, "x2:", x2)
 
-So, we have three variables, a, b, and c.
-A equals the coefficient of x squared which is 1
-B equals the coefficient of x, which is -8
-And C equals 12
-Now we say, x1 equals
-Parens
--b
+To refresh your memory, the roots of an equation are the values of x where the function is equal to zero. For quadratic equations, we can find the roots using the quadratic formula which is
 
-- Parens
-  b\*\*2
+-b +- sqrt(b^2 - 4ac) / 2a
 
-* 4
-  Times
-  a
-  Times
-  C
-  Raised to
-  0.5
-  All divided by
-  2
-  Times
-  A
-  Next, x2 is the same as x1
-  But we replace the + with -
-  Then print
-  X1, comma
-  The value x1
-  X2, comma
-  The value of x2
-  Run, and we see that the roots are 6 and 2. Great!
-  Summary
-  In this lecture:
-  We talked about how to create a new Python script,
-  How to use the Print function,
-  And we introduced the idea of expressions, strings, variables, and operators.
-  Thanks for watching, and see you in the next one!
+Print out the two roots! Pause the video and give it a try. By the way, you can get the square root by raising a value to the power of 0.5.
+
+```vscanim
+clear_canvas()
+type("a = 1")
+type("b = -8")
+type("c = 12")
+```
+
+So, we have three variables, a, b, and c. A equals the coefficient of x squared which is 1, B equals the coefficient of x, which is -8, And C equals 12.
+
+```vscanim
+type("r1 = ", return_after=False)   # r1 equals
+type("(", return_after=False)       # parens
+type("-b + ", return_after=False)   # minus b plus
+type("(", return_after=False)       # parens
+type("b**2", return_after=False)    # b squared
+type(" - ", return_after=False)     # minus
+type("4", return_after=False)       # four
+type(" * a", return_after=False)    # times a
+type(" * c", return_after=False)    # times c
+move(cols=1)
+type(" ** 0.5", return_after=False) # raised to the power of a half
+move(cols=1)
+type(" / ", return_after=False)     # all over
+type("(2 * a)")                     # two times a
+```
+
+```vscanim
+type("r2 = (-b - (b**2 - 4 * a * c) ** 0.5) / (2 * a)")
+```
+
+Next, r2 is the same as r1, except we replace the + with a -.
+
+```vscanim
+type("print", return_after=False)    # print
+type("(", return_after=False)        # parens
+type('"r1:", ', return_after=False)  # the label r1, comma
+type("r1, ", return_after=False)     # the value of r1
+type('"r2:", ', return_after=False)  # the label r2, comma
+type("r2")                           # the value of r2
+```
+
+```vscanim
+run()
+```
+
+Run, and we see that the roots are 6 and 2. Great!
+
+# Summary
+
+In this lecture:
+
+- We talked about how to create a new Python script,
+- How to use the Print function,
+- And we introduced the idea of expressions, strings, variables, and operators.
+
+Thanks for watching, and see you in the next one!
