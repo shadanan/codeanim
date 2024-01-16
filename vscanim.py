@@ -6,17 +6,12 @@ import time
 from dataclasses import dataclass
 from enum import Enum
 
-
-@dataclass
-class Delayer:
-    delay: float = 0.5
-
-    def __call__(self):
-        time.sleep(self.delay)
+delay_seconds: float = 0.5
+verbosity: int = 0
 
 
-delay = Delayer()
-verbosity = 0
+def delay():
+    time.sleep(delay_seconds)
 
 
 def escape(text: str):
@@ -92,8 +87,6 @@ def repeat(lines: list[KeyStroke], num: int) -> list[str]:
 
 
 def send(lines: list[KeyStroke] | list[str] | list[KeyStroke | str]):
-    if not is_vscode_active():
-        raise Exception("Aborting execution because VS Code is no longer active")
     cmd = ['tell application "System Events"'] + indent(lines) + ["end tell"]
     osascript("\n".join(cmd))
 
@@ -187,6 +180,7 @@ def run(final_delay: bool = True):
 
 
 def main():
+    global delay_seconds
     global verbosity
 
     parser = argparse.ArgumentParser()
@@ -217,6 +211,7 @@ def main():
     )
     args = parser.parse_args()
     verbosity = args.verbose
+    delay_seconds = args.delay
 
     vscanim_lines = []
     is_vscanim = False
@@ -241,9 +236,10 @@ def main():
         if is_vscanim and is_included:
             vscanim_lines.append(line)
 
-    delay.delay = args.delay
     activate_vscode()
     for line in vscanim_lines:
+        if not is_vscode_active():
+            raise Exception("Aborting execution because VS Code is no longer active")
         if verbosity > 0:
             print(f"> VscAnim Command: {line}")
         eval(line)
