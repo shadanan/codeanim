@@ -277,7 +277,7 @@ To refresh your memory, the roots of an equation are the values of x where the f
 
 Print out the two roots! Pause the video and give it a try. By the way, you can get the square root by raising a value to the power of 0.5.
 
-```vscanim
+```vscanim roots-exercise
 clear_canvas()
 type("a = 1")
 type("b = -8")
@@ -287,13 +287,12 @@ type("c = 12")
 So, we have three variables, a, b, and c. A equals the coefficient of x squared which is 1, B equals the coefficient of x, which is -8, And C equals 12.
 
 ```vscanim
-type("r1 = ", return_after=False)   # r1 equals
-type("(", return_after=False)       # parens
-type("-b + ", return_after=False)   # minus b plus
-type("(", return_after=False)       # parens
+type("r1", return_after=False)      # r1
+type(" = (", return_after=False)    # equals parens
+type("-b", return_after=False)      # minus b
+type(" + (", return_after=False)    # plus parens
 type("b**2", return_after=False)    # b squared
-type(" - ", return_after=False)     # minus
-type("4", return_after=False)       # four
+type(" - 4", return_after=False)    # minus four
 type(" * a", return_after=False)    # times a
 type(" * c", return_after=False)    # times c
 move(cols=1)

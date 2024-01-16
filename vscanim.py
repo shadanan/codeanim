@@ -1,29 +1,44 @@
 #!/usr/bin/env python3
 import argparse
 import subprocess
+import textwrap
 import time
 from dataclasses import dataclass
 from enum import Enum
 
 
-def delay(seconds: float = 1):
-    time.sleep(seconds)
+@dataclass
+class Delayer:
+    delay: float = 0.5
+
+    def __call__(self):
+        time.sleep(self.delay)
+
+
+delay = Delayer()
+verbosity = 0
 
 
 def escape(text: str):
     return text.replace('"', '\\"')
 
 
-def osascript(cmd: str):
+def osascript(cmd: str) -> str:
+    if verbosity > 1:
+        print(cmd)
     return subprocess.check_output(["osascript", "-e", cmd]).decode("utf-8").strip()
 
 
-def activate(app: str):
-    osascript(f'tell application "{app}" to activate')
-
-
 def activate_vscode():
-    activate("Visual Studio Code")
+    osascript(f'tell application "Visual Studio Code" to activate')
+
+
+def is_vscode_active() -> bool:
+    frontmost_process = osascript(
+        'tell application "System Events" to '
+        "get name of first process whose frontmost is true"
+    )
+    return frontmost_process == "Electron"
 
 
 class KeyCode(Enum):
@@ -68,12 +83,18 @@ def command(cmd: str):
     ]
 
 
-def repeat(lines: list[KeyStroke], num: int):
-    return [f"repeat {num} times"] + lines + ["end repeat"]
+def indent(strokes: list[KeyStroke] | list[str] | list[KeyStroke | str]) -> list[str]:
+    return [textwrap.indent(str(s), "  ") for s in strokes]
+
+
+def repeat(lines: list[KeyStroke], num: int) -> list[str]:
+    return [f"repeat {num} times"] + indent(lines) + ["end repeat"]
 
 
 def send(lines: list[KeyStroke] | list[str] | list[KeyStroke | str]):
-    cmd = ['tell application "System Events"'] + [str(l) for l in lines] + ["end tell"]
+    if not is_vscode_active():
+        raise Exception("Aborting execution because VS Code is no longer active")
+    cmd = ['tell application "System Events"'] + indent(lines) + ["end tell"]
     osascript("\n".join(cmd))
 
 
@@ -166,28 +187,65 @@ def run(final_delay: bool = True):
 
 
 def main():
+    global verbosity
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "markdown", help="The markdown file containing the animation commands"
+        "markdown",
+        help="The markdown file containing the animation commands",
+    )
+    parser.add_argument(
+        "--start-label",
+        help="The label to start at",
+    )
+    parser.add_argument(
+        "--stop-label",
+        help="The label to stop at",
+    )
+    parser.add_argument(
+        "--delay",
+        type=float,
+        default=0.5,
+        help="The default delay between commands",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="Increase verbosity",
     )
     args = parser.parse_args()
+    verbosity = args.verbose
 
     vscanim_lines = []
     is_vscanim = False
+    is_included = args.start_label is None
     with open(args.markdown) as f:
         lines = f.read().splitlines()
     for line in lines:
-        if line.startswith("```vscanim"):
-            is_vscanim = True
+        tokens = line.strip().split()
+        if len(tokens) == 0:
             continue
-        if line.startswith("```"):
+        if tokens[0] == "```vscanim":
+            is_vscanim = True
+            if len(tokens) >= 2:
+                if tokens[1] == args.start_label:
+                    is_included = True
+                elif tokens[1] == args.stop_label:
+                    is_included = False
+            continue
+        if tokens[0] == "```":
             is_vscanim = False
             continue
-        if is_vscanim:
+        if is_vscanim and is_included:
             vscanim_lines.append(line)
 
+    delay.delay = args.delay
     activate_vscode()
     for line in vscanim_lines:
+        if verbosity > 0:
+            print(f"> VscAnim Command: {line}")
         eval(line)
 
 
