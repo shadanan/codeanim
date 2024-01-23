@@ -4,17 +4,12 @@ import ast
 import subprocess
 import time
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import pyperclip
 from pynput.keyboard import Controller, Key
 
 keyboard = Controller()
-
-APPLE_SCRIPT_VSCODE_IS_ACTIVE = (
-    "  if (short name of (info for (path to frontmost application))) "
-    'is not equal to "Code" then error "VS Code not active"'
-)
 
 
 def osascript(cmd: str) -> str:
@@ -27,14 +22,9 @@ def activate_vscode():
 
 @dataclass
 class Delayer:
-    tap: float
-    keys: dict[str | Key, float]
-    end: float
-
-    def __init__(self):
-        self.tap = 0.02
-        self.keys = {}
-        self.end = 0.5
+    tap: float = 0.02
+    keys: dict[str | Key, float] = field(default_factory=dict)
+    end: float = 0.5
 
 
 delayer = Delayer()

@@ -96,6 +96,17 @@ Execute your Python script:
 ./codeanim_script_demo.py
 ```
 
+## Development
+
+Clone the repo, create a venv, and install dependencies:
+
+```shell
+git clone https://github.com/shadanan/codeanim.git
+cd codeanim
+python3 -m venv .venv
+pip install .
+```
+
 ## Limitations
 
 CodeAnim currently only works on MacOS because of a dependency on AppleScript, which is used to switch to the VS Code window. Also, many of the commands send Mac specific keystrokes. With some effort, CodeAnim can be made to work on other platforms.
