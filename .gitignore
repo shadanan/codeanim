@@ -1,2 +1,7 @@
 # Generated python files
+build
 __pycache__
+codeanim.egg-info
+
+# Virtual environment
+.venv

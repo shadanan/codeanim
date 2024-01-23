@@ -1,0 +1,7 @@
+[project]
+name = "codeanim"
+version = "0.0.1"
+dependencies = ["pynput", "pyperclip"]
+
+[project.scripts]
+codeanim = "codeanim:main"
