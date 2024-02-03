@@ -46,16 +46,16 @@ Some text to be read.
 
 ```python codeanim
 # Bring VS Code to the front
-activate_vscode()
+vscode.activate()
 
 # Open myfile.py
-focus("myfile.py")
+vscode.focus("myfile.py")
 
 # Insert print("Hello, World!") into myfile.py
-write('print("Hello, World!")\n')
+vscode.write('print("Hello, World!")\n')
 
 # Execute the script
-run()
+vscode.run()
 ```
 ````
 
@@ -75,19 +75,19 @@ Add this to `codeanim_script_demo.py`:
 
 ```python
 #!/usr/bin/env python3
-import codeanim
+from codeanim import vscode
 
 # Bring VS Code to the front
-codeanim.activate_vscode()
+vscode.activate()
 
 # Open myfile.py
-codeanim.focus("myfile.py")
+vscode.focus("myfile.py")
 
 # Insert print("Hello, World!") into myfile.py
-codeanim.write('print("Hello, World!")\n')
+vscode.write('print("Hello, World!")\n')
 
 # Execute the script
-codeanim.run()
+vscode.run()
 ```
 
 Execute your Python script:
