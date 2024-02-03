@@ -107,6 +107,22 @@ python3 -m venv .venv
 pip install .
 ```
 
+## Tests
+
+There aren't any unit tests yet. In the tests folder, there is an end-to-end test that uses CodeAnim to open the `scratch.py` file, types out some code, and executes it. To run the test:
+
+```sh
+codeanim tests/e2e.md -v
+```
+
+Then, validate that it worked by observing that the animation runs, types out:
+
+```python
+print("Hello, World!")
+```
+
+And executes the script.
+
 ## Limitations
 
 CodeAnim currently only works on MacOS because of a dependency on AppleScript, which is used to switch to the VS Code window. Also, many of the commands send Mac specific keystrokes. With some effort, CodeAnim can be made to work on other platforms.
