@@ -1,7 +1,10 @@
 [project]
 name = "codeanim"
 version = "0.0.1"
+authors = [{ name = "Shad Sharma", email = "shadanan@gmail.com" }]
+description = "A tool to animate VS Code"
 dependencies = ["pynput", "pyperclip"]
+readme = "README"
 
 [project.scripts]
 codeanim = "codeanim:main"
