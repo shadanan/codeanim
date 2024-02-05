@@ -10,7 +10,7 @@ vscode.activate()
 vscode.focus("scratch.py")
 
 # Insert print("Hello, World!") into scratch.py
-vscode.write('print("Hello, World!")\n')
+write('print("Hello, World!")\n')
 
 # Execute the script
 vscode.run()

@@ -2,6 +2,7 @@
 import argparse
 
 from . import core, markdown, vscode
+from .core import backspace, delay, delays, no_delays, paste, set_delays, tap, write
 
 
 def main():

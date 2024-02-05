@@ -52,7 +52,7 @@ vscode.activate()
 vscode.focus("myfile.py")
 
 # Insert print("Hello, World!") into myfile.py
-vscode.write('print("Hello, World!")\n')
+write('print("Hello, World!")\n')
 
 # Execute the script
 vscode.run()
@@ -75,7 +75,7 @@ Add this to `codeanim_script_demo.py`:
 
 ```python
 #!/usr/bin/env python3
-from codeanim import vscode
+from codeanim import *
 
 # Bring VS Code to the front
 vscode.activate()
@@ -84,7 +84,7 @@ vscode.activate()
 vscode.focus("myfile.py")
 
 # Insert print("Hello, World!") into myfile.py
-vscode.write('print("Hello, World!")\n')
+write('print("Hello, World!")\n')
 
 # Execute the script
 vscode.run()

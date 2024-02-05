@@ -51,15 +51,6 @@ def no_delays():
     return delays(tap=0, keys={}, end=0)
 
 
-def tap(key: str | Key, *, modifiers: list[str | Key] = []):
-    for modifier in modifiers:
-        keyboard.press(modifier)
-    keyboard.tap(key)
-    for modifier in modifiers:
-        keyboard.release(modifier)
-    time.sleep(delayer.keys.get(key, delayer.tap))
-
-
 def delay(end: float | None = None):
     end = delayer.end if end is None else end
     time.sleep(end)
@@ -71,6 +62,15 @@ def codeanim(func):
         delay()
 
     return codeanim_func
+
+
+def tap(key: str | Key, *, modifiers: list[str | Key] = []):
+    for modifier in modifiers:
+        keyboard.press(modifier)
+    keyboard.tap(key)
+    for modifier in modifiers:
+        keyboard.release(modifier)
+    time.sleep(delayer.keys.get(key, delayer.tap))
 
 
 @codeanim

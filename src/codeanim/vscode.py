@@ -2,7 +2,6 @@ import pyperclip
 from pynput.keyboard import Key
 
 from . import core
-from .core import write
 
 
 def activate():
@@ -12,7 +11,7 @@ def activate():
 @core.codeanim
 def palette(cmd: str):
     core.tap("p", modifiers=[Key.cmd])
-    write(cmd)
+    core.write(cmd)
     core.tap(Key.enter)
 
 
