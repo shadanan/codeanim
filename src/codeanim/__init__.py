@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 
-from . import markdown, vscode
-from .core import backspace, delay, delays, no_delays, paste, set_delays, tap, write
+from . import core, markdown, vscode
 
 
 def main():
