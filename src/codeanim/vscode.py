@@ -1,110 +1,111 @@
 import pyperclip
 from pynput.keyboard import Key
 
-from .core import backspace, codeanim, keyboard, no_delays, osascript, tap, write
+from . import core
+from .core import write
 
 
 def activate():
-    osascript(f'tell application "Visual Studio Code" to activate')
+    core.osascript(f'tell application "Visual Studio Code" to activate')
 
 
-@codeanim
+@core.codeanim
 def palette(cmd: str):
-    tap("p", modifiers=[Key.cmd])
+    core.tap("p", modifiers=[Key.cmd])
     write(cmd)
-    tap(Key.enter)
+    core.tap(Key.enter)
 
 
-@codeanim
+@core.codeanim
 def newline(line: int = 0, *, above: bool = False):
     if line > 0:
-        with no_delays():
+        with core.no_delays():
             jump(line)
-        tap(Key.enter, modifiers=[Key.cmd, Key.shift])
+        core.tap(Key.enter, modifiers=[Key.cmd, Key.shift])
     else:
-        tap(Key.enter, modifiers=[Key.cmd, Key.shift] if above else [Key.cmd])
+        core.tap(Key.enter, modifiers=[Key.cmd, Key.shift] if above else [Key.cmd])
 
 
-@codeanim
+@core.codeanim
 def jump(line: int, col: int = 1):
     pyperclip.copy(f":{line},{col}")
-    with keyboard.pressed(Key.cmd):
-        keyboard.tap("p")
-        keyboard.tap("v")
-    keyboard.tap(Key.enter)
+    with core.keyboard.pressed(Key.cmd):
+        core.keyboard.tap("p")
+        core.keyboard.tap("v")
+    core.keyboard.tap(Key.enter)
 
 
-@codeanim
+@core.codeanim
 def move(*, lines: int = 0, cols: int = 0, select: bool = False):
     if lines < 0:
         for _ in range(-lines):
-            tap(Key.up, modifiers=[Key.shift] if select else [])
+            core.tap(Key.up, modifiers=[Key.shift] if select else [])
     elif lines > 0:
         for _ in range(lines):
-            tap(Key.down, modifiers=[Key.shift] if select else [])
+            core.tap(Key.down, modifiers=[Key.shift] if select else [])
     if cols < 0:
         for _ in range(-cols):
-            tap(Key.left, modifiers=[Key.shift] if select else [])
+            core.tap(Key.left, modifiers=[Key.shift] if select else [])
     elif cols > 0:
         for _ in range(cols):
-            tap(Key.right, modifiers=[Key.shift] if select else [])
+            core.tap(Key.right, modifiers=[Key.shift] if select else [])
 
 
-@codeanim
+@core.codeanim
 def end(*, select: bool = False):
-    tap(Key.right, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd])
+    core.tap(Key.right, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd])
 
 
-@codeanim
+@core.codeanim
 def bottom(*, select: bool = False):
-    tap(Key.down, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd])
+    core.tap(Key.down, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd])
 
 
-@codeanim
+@core.codeanim
 def focus(file: str):
     palette(file)
 
 
-@codeanim
+@core.codeanim
 def focus_terminal():
-    tap("`", modifiers=[Key.ctrl])
+    core.tap("`", modifiers=[Key.ctrl])
 
 
-@codeanim
+@core.codeanim
 def focus_editor():
-    tap("1", modifiers=[Key.ctrl])
+    core.tap("1", modifiers=[Key.ctrl])
 
 
-@codeanim
+@core.codeanim
 def toggle_panel():
-    tap("j", modifiers=[Key.cmd])
+    core.tap("j", modifiers=[Key.cmd])
 
 
-@codeanim
+@core.codeanim
 def toggle_primary_sidebar():
-    tap("b", modifiers=[Key.cmd])
+    core.tap("b", modifiers=[Key.cmd])
 
 
-@codeanim
+@core.codeanim
 def clear_terminal():
     focus_terminal()
-    tap("k", modifiers=[Key.cmd])
+    core.tap("k", modifiers=[Key.cmd])
     focus_editor()
 
 
-@codeanim
+@core.codeanim
 def clear_editor():
-    tap("a", modifiers=[Key.cmd])
-    backspace()
+    core.tap("a", modifiers=[Key.cmd])
+    core.backspace()
 
 
-@codeanim
+@core.codeanim
 def clear_below(line: int):
     jump(line)
-    tap(Key.down, modifiers=[Key.cmd, Key.shift])
-    backspace()
+    core.tap(Key.down, modifiers=[Key.cmd, Key.shift])
+    core.backspace()
 
 
-@codeanim
+@core.codeanim
 def run():
-    tap(Key.enter, modifiers=[Key.cmd, Key.shift, Key.ctrl, Key.alt])
+    core.tap(Key.enter, modifiers=[Key.cmd, Key.shift, Key.ctrl, Key.alt])
