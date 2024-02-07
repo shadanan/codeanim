@@ -5,7 +5,7 @@ from . import core
 
 
 def activate():
-    core.osascript(f'tell application "Visual Studio Code" to activate')
+    core.osascript('tell application "Visual Studio Code" to activate')
 
 
 @core.codeanim
