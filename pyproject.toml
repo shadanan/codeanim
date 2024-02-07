@@ -1,6 +1,6 @@
 [project]
 name = "codeanim"
-version = "0.0.1"
+version = "0.0.2"
 authors = [{ name = "Shad Sharma", email = "shadanan@gmail.com" }]
 description = "A tool to animate VS Code"
 dependencies = ["pynput", "pyperclip"]

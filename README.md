@@ -46,16 +46,16 @@ Some text to be read.
 
 ```python codeanim
 # Bring VS Code to the front
-activate_vscode()
+vscode.activate()
 
 # Open myfile.py
-focus("myfile.py")
+vscode.focus("myfile.py")
 
 # Insert print("Hello, World!") into myfile.py
 write('print("Hello, World!")\n')
 
 # Execute the script
-run()
+vscode.run()
 ```
 ````
 
@@ -75,19 +75,19 @@ Add this to `codeanim_script_demo.py`:
 
 ```python
 #!/usr/bin/env python3
-import codeanim
+from codeanim import *
 
 # Bring VS Code to the front
-codeanim.activate_vscode()
+vscode.activate()
 
 # Open myfile.py
-codeanim.focus("myfile.py")
+vscode.focus("myfile.py")
 
 # Insert print("Hello, World!") into myfile.py
-codeanim.write('print("Hello, World!")\n')
+write('print("Hello, World!")\n')
 
 # Execute the script
-codeanim.run()
+vscode.run()
 ```
 
 Execute your Python script:
@@ -106,6 +106,22 @@ cd codeanim
 python3 -m venv .venv
 pip install .
 ```
+
+## Tests
+
+There aren't any unit tests yet. In the tests folder, there is an end-to-end test that uses CodeAnim to open the `scratch.py` file, types out some code, and executes it. To run the test:
+
+```sh
+codeanim tests/e2e.md -v
+```
+
+Then, validate that it worked by observing that the animation runs, types out:
+
+```python
+print("Hello, World!")
+```
+
+And executes the script.
 
 ## Limitations
 
