@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from codeanim import *
+from codeanim import vscode, write
 
 # Bring VS Code to the front
 vscode.activate()
