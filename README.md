@@ -107,6 +107,17 @@ python3 -m venv .venv
 pip install .
 ```
 
+### Formatting
+
+This project adopts the Ruff formatter and is enforced by a GitHub action.
+
+### VS Code
+
+Useful extensions when developing CodeAnim:
+
+- [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+- [Ruff](https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff)
+
 ## Tests
 
 There aren't any unit tests yet. In the tests folder, there is an end-to-end test that uses CodeAnim to open the `scratch.py` file, types out some code, and executes it. To run the test:
