@@ -17,7 +17,7 @@ def osascript(cmd: str) -> str:
 class Delayer:
     tap: float = 0.02
     keys: dict[str | Key, float] = field(default_factory=dict)
-    end: float = 0.5
+    end: float = 1
 
 
 delayer = Delayer()
@@ -49,6 +49,10 @@ def delays(
 
 def no_delays():
     return delays(tap=0, keys={}, end=0)
+
+
+def no_final_delay():
+    return delays(end=0)
 
 
 def delay(end: float | None = None):

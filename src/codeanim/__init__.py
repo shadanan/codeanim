@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 
-from . import core, markdown, vscode  # noqa: F401
+from . import chrome, core, markdown, vscode  # noqa: F401
 from .core import (  # noqa: F401
     backspace,
     delay,
