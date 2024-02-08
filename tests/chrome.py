@@ -7,6 +7,9 @@ chrome.activate()
 # Create a new window
 chrome.new_window()
 
+# Resize the window
+chrome.resize((0, 0), (800, 600))
+
 # Navigate to the Codeanim GitHub repository
 chrome.navigate("https://github.com/shadanan/codeanim")
 
