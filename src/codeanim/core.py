@@ -8,8 +8,6 @@ from pynput.keyboard import Controller, Key
 
 keyboard = Controller()
 
-SIZE_1080P = (1920, 1080)
-
 
 def osascript(cmd: str) -> str:
     return subprocess.check_output(["osascript", "-e", cmd]).decode().strip()
