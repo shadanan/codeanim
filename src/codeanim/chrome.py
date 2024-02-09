@@ -2,8 +2,15 @@ from . import core
 from pynput.keyboard import Key
 
 
+APP_NAME = "Google Chrome"
+
+
 def activate():
-    core.osascript('tell application "Google Chrome" to activate')
+    core.activate(APP_NAME)
+
+
+def resize(position: tuple[int, int], size: tuple[int, int]):
+    core.resize(APP_NAME, position, size)
 
 
 @core.codeanim

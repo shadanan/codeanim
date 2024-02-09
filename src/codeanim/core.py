@@ -13,6 +13,23 @@ def osascript(cmd: str) -> str:
     return subprocess.check_output(["osascript", "-e", cmd]).decode().strip()
 
 
+def activate(app_name: str):
+    osascript(f'tell application "{app_name}" to activate')
+
+
+def resize(app_name: str, position: tuple[int, int], size: tuple[int, int]):
+    osascript(
+        f"""
+        tell application "System Events" to tell process "{app_name}"
+          tell front window
+            set position to {{{position[0]}, {position[1]}}}
+            set size to {{{size[0]}, {size[1]}}}
+          end tell
+        end tell
+        """
+    )
+
+
 @dataclass
 class Delayer:
     tap: float = 0.02

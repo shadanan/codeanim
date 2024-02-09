@@ -4,8 +4,15 @@ from pynput.keyboard import Key
 from . import core
 
 
+APP_NAME = "Visual Studio Code"
+
+
 def activate():
-    core.osascript('tell application "Visual Studio Code" to activate')
+    core.activate(APP_NAME)
+
+
+def resize(position: tuple[int, int], size: tuple[int, int]):
+    core.resize(APP_NAME, position, size)
 
 
 @core.codeanim
