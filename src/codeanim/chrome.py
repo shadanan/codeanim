@@ -1,14 +1,16 @@
-from . import core
 from pynput.keyboard import Key
 
+from . import core
 
 APP_NAME = "Google Chrome"
 
 
+@core.codeanim
 def activate():
     core.activate(APP_NAME)
 
 
+@core.codeanim
 def resize(position: tuple[int, int], size: tuple[int, int]):
     core.resize(APP_NAME, position, size)
 
@@ -38,13 +40,15 @@ def new_tab():
 
 
 @core.codeanim
-def previous_tab():
-    core.tap("{", modifiers=[Key.cmd, Key.shift])
+def previous_tab(times: int = 1):
+    for _ in range(times):
+        core.tap("{", modifiers=[Key.cmd, Key.shift])
 
 
 @core.codeanim
-def next_tab():
-    core.tap("}", modifiers=[Key.cmd, Key.shift])
+def next_tab(times: int = 1):
+    for _ in range(times):
+        core.tap("}", modifiers=[Key.cmd, Key.shift])
 
 
 @core.codeanim
@@ -71,3 +75,15 @@ def refresh():
 @core.codeanim
 def toggle_devtools():
     core.tap("i", modifiers=[Key.cmd, Key.alt])
+
+
+@core.codeanim
+def prev_devtools_panel(times: int = 1):
+    for _ in range(times):
+        core.tap("[", modifiers=[Key.cmd])
+
+
+@core.codeanim
+def next_devtools_panel(times: int = 1):
+    for _ in range(times):
+        core.tap("]", modifiers=[Key.cmd])

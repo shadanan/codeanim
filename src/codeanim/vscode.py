@@ -3,14 +3,15 @@ from pynput.keyboard import Key
 
 from . import core
 
+APP_NAME = "Code"
 
-APP_NAME = "Visual Studio Code"
 
-
+@core.codeanim
 def activate():
     core.activate(APP_NAME)
 
 
+@core.codeanim
 def resize(position: tuple[int, int], size: tuple[int, int]):
     core.resize(APP_NAME, position, size)
 

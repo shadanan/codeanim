@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import os
 
 from . import chrome, core, markdown, vscode  # noqa: F401
 from .core import (  # noqa: F401
@@ -32,7 +33,21 @@ def main():
         action="store_true",
         help="Print the animation commands as they are executed",
     )
+    parser.add_argument(
+        "--tap-delay",
+        type=float,
+        default=os.environ.get("CODE_ANIM_TAP_DELAY"),
+        help="The delay between keyboard taps",
+    )
+    parser.add_argument(
+        "--end-delay",
+        type=float,
+        default=os.environ.get("CODE_ANIM_END_DELAY"),
+        help="The delay at the end of each animation command",
+    )
     args = parser.parse_args()
+
+    set_delays(tap=args.tap_delay, end=args.end_delay)
 
     expressions = markdown.parse(args.markdown, args.labels)
     for expression in expressions:
