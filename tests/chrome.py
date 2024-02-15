@@ -17,8 +17,10 @@ chrome.navigate("https://github.com/shadanan/codeanim")
 chrome.new_tab()
 chrome.navigate("https://www.youtube.com/@FriendlyTL")
 
-# Open Chrome DevTools
+# Open DevTools, switch to the Network panel, and refresh the page
 chrome.toggle_devtools()
+chrome.next_devtools_panel(times=2)
+chrome.refresh()
 
 # Select previous tab
 chrome.previous_tab()

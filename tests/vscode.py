@@ -4,6 +4,9 @@ from codeanim import vscode, write
 # Bring VS Code to the front
 vscode.activate()
 
+# Resize VS Code to 800x600
+vscode.resize((0, 25), (800, 600))
+
 # Open scratch.py
 vscode.focus("scratch.py")
 

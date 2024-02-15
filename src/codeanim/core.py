@@ -17,10 +17,10 @@ def activate(app_name: str):
     osascript(f'tell application "{app_name}" to activate')
 
 
-def resize(app_name: str, position: tuple[int, int], size: tuple[int, int]):
+def resize(process_name: str, position: tuple[int, int], size: tuple[int, int]):
     osascript(
         f"""
-        tell application "System Events" to tell process "{app_name}"
+        tell application "System Events" to tell process "{process_name}"
           tell front window
             set position to {{{position[0]}, {position[1]}}}
             set size to {{{size[0]}, {size[1]}}}
