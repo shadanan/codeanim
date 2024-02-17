@@ -15,7 +15,6 @@ pip install git+https://github.com/shadanan/codeanim
 The run command uses a custom keybinding. Please add this to your `keybindings.json` file in VS Code:
 
 ```json
-// Place your key bindings in this file to override the defaultsauto[]
 [
   {
     "key": "ctrl+shift+alt+cmd+enter",
@@ -64,6 +63,11 @@ To execute the CodeAnim commands in the Markdown file:
 ```shell
 codeanim codeanim-markdown-demo.md
 ```
+
+#### Flags
+
+- Set `-v` or `--verbose` to enable verbose mode. Commands will be printed out as they are executed.
+- Set `--live` to enable presentation mode. In this mode, a wait() will be injected after every codeanim fence.
 
 ### Usage of CodeAnim Library
 
