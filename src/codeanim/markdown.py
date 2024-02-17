@@ -1,7 +1,7 @@
 import ast
 
 
-def parse(path: str, labels: list[str] | None) -> list[str]:
+def parse(path: str, labels: list[str] | None, live: bool) -> list[str]:
     with open(path) as f:
         lines = f.read().splitlines()
 
@@ -15,6 +15,8 @@ def parse(path: str, labels: list[str] | None) -> list[str]:
             is_codeanim = codeanim and (labels is None or label in labels)
             continue
         if line == "```":
+            if is_codeanim and live:
+                codeanim_lines.append("wait()")
             is_codeanim = False
             continue
         if is_codeanim:

@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-from codeanim import vscode, write
+from codeanim import vscode, wait, write
 
 # Bring VS Code to the front
 vscode.activate()
+
+# Wait for shift to be pressed
+wait()
 
 # Resize VS Code to 800x600
 vscode.resize((0, 25), (800, 600))
