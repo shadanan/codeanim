@@ -13,6 +13,7 @@ from .core import (  # noqa: F401
     tap,
     write,
 )
+from .monitor import wait  # noqa: F401
 
 
 def main():
@@ -45,11 +46,16 @@ def main():
         default=os.environ.get("CODE_ANIM_END_DELAY"),
         help="The delay at the end of each animation command",
     )
+    parser.add_argument(
+        "--live",
+        action="store_true",
+        help="Insert wait after each codeanim block",
+    )
     args = parser.parse_args()
 
     set_delays(tap=args.tap_delay, end=args.end_delay)
 
-    expressions = markdown.parse(args.markdown, args.labels)
+    expressions = markdown.parse(args.markdown, args.labels, args.live)
     for expression in expressions:
         if args.verbose:
             print(expression)

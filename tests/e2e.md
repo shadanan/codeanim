@@ -11,7 +11,11 @@ vscode.focus("scratch.py")
 
 # Insert print("Hello, World!") into scratch.py
 write('print("Hello, World!")\n')
+```
 
+If `codeanim` is executed with the `--live` command, a wait() will be inserted here.
+
+```python codeanim
 # Execute the script
 vscode.run()
 ```
