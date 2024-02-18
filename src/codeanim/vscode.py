@@ -26,7 +26,7 @@ def palette(cmd: str):
 @core.codeanim
 def newline(line: int = 0, *, above: bool = False):
     if line > 0:
-        with core.no_delays():
+        with core.delay(**core.Delayer.NO_DELAYS):
             jump(line)
         core.tap(Key.enter, modifiers=[Key.cmd, Key.shift])
     else:

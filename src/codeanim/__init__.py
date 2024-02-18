@@ -3,17 +3,15 @@ import argparse
 import os
 
 from . import chrome, core, markdown, vscode  # noqa: F401
-from .core import (  # noqa: F401
-    backspace,
-    delay,
-    delays,
-    no_delays,
-    paste,
-    set_delays,
-    tap,
-    write,
-)
-from .monitor import wait  # noqa: F401
+from .monitor import KeyMonitor
+
+# Public API
+backspace = core.backspace
+delay = core.delay
+pause = core.delay.pause
+paste = core.paste
+tap = core.tap
+write = core.write
 
 
 def main():
@@ -53,13 +51,15 @@ def main():
     )
     args = parser.parse_args()
 
-    set_delays(tap=args.tap_delay, end=args.end_delay)
+    delay.set(tap=args.tap_delay, end=args.end_delay)
 
-    expressions = markdown.parse(args.markdown, args.labels, args.live)
-    for expression in expressions:
-        if args.verbose:
-            print(expression)
-        exec(expression)
+    with KeyMonitor() as monitor:
+        wait = monitor.wait  # noqa: F841
+        expressions = markdown.parse(args.markdown, args.labels, args.live)
+        for expression in expressions:
+            if args.verbose:
+                print(expression)
+            exec(expression)
 
 
 if __name__ == "__main__":

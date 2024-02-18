@@ -36,51 +36,44 @@ class Delayer:
     keys: dict[str | Key, float] = field(default_factory=dict)
     end: float = 1
 
+    NO_DELAYS = {"tap": 0, "keys": {}, "end": 0}
 
-delayer = Delayer()
+    def set(
+        self,
+        *,
+        tap: float | None = None,
+        keys: dict[str | Key, float] | None = None,
+        end: float | None = None,
+    ):
+        prev_tap, self.tap = self.tap, self.tap if tap is None else tap
+        prev_keys, self.keys = self.keys, self.keys if keys is None else keys
+        prev_end, self.end = self.end, self.end if end is None else end
+        return prev_tap, prev_keys, prev_end
 
+    def pause(self, end: float | None = None):
+        end = self.end if end is None else end
+        time.sleep(end)
 
-def set_delays(
-    *,
-    tap: float | None = None,
-    keys: dict[str | Key, float] | None = None,
-    end: float | None = None,
-):
-    prev_tap, delayer.tap = delayer.tap, delayer.tap if tap is None else tap
-    prev_keys, delayer.keys = delayer.keys, delayer.keys if keys is None else keys
-    prev_end, delayer.end = delayer.end, delayer.end if end is None else end
-    return prev_tap, prev_keys, prev_end
-
-
-@contextmanager
-def delays(
-    *,
-    tap: float | None = None,
-    keys: dict[str | Key, float] | None = None,
-    end: float | None = None,
-):
-    prev_tap, prev_keys, prev_end = set_delays(tap=tap, keys=keys, end=end)
-    yield
-    delayer.tap, delayer.keys, delayer.end = prev_tap, prev_keys, prev_end
-
-
-def no_delays():
-    return delays(tap=0, keys={}, end=0)
-
-
-def no_final_delay():
-    return delays(end=0)
+    @contextmanager
+    def __call__(
+        self,
+        *,
+        tap: float | None = None,
+        keys: dict[str | Key, float] | None = None,
+        end: float | None = None,
+    ):
+        prev_tap, prev_keys, prev_end = self.set(tap=tap, keys=keys, end=end)
+        yield
+        self.set(tap=prev_tap, keys=prev_keys, end=prev_end)
 
 
-def delay(end: float | None = None):
-    end = delayer.end if end is None else end
-    time.sleep(end)
+delay = Delayer()
 
 
 def codeanim(func):
-    def codeanim_func(*args, **kwargs):
+    def codeanim_func(*args, pause: float | None = None, **kwargs):
         func(*args, **kwargs)
-        delay()
+        delay.pause(end=pause)
 
     return codeanim_func
 
@@ -91,7 +84,7 @@ def tap(key: str | Key, *, modifiers: list[str | Key] = []):
     keyboard.tap(key)
     for modifier in modifiers:
         keyboard.release(modifier)
-    time.sleep(delayer.keys.get(key, delayer.tap))
+    time.sleep(delay.keys.get(key, delay.tap))
 
 
 @codeanim
