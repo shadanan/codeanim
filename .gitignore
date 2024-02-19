@@ -5,3 +5,6 @@ codeanim.egg-info
 
 # Virtual environment
 .venv
+
+# E2E test artifacts
+demo

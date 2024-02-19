@@ -1,12 +1,32 @@
+import os
 import subprocess
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
+from typing import Callable, ParamSpec, TypeVar
 
 import pyperclip
 from pynput.keyboard import Controller, Key
 
 keyboard = Controller()
+
+
+def expand(path: str) -> str:
+    return os.path.expandvars(os.path.expanduser(path))
+
+
+def open(path: str):
+    path = expand(path)
+    if not os.path.exists(path):
+        raise Exception(f"{path} does not exist")
+    return subprocess.check_output(["open", path])
+
+
+def code(path: str):
+    path = expand(path)
+    if not os.path.exists(path):
+        raise Exception(f"{path} does not exist")
+    return subprocess.check_output(["code", path])
 
 
 def osascript(cmd: str) -> str:
@@ -35,8 +55,6 @@ class Delayer:
     tap: float = 0.02
     keys: dict[str | Key, float] = field(default_factory=dict)
     end: float = 1
-
-    NO_DELAYS = {"tap": 0, "keys": {}, "end": 0}
 
     def set(
         self,
@@ -70,12 +88,22 @@ class Delayer:
 delay = Delayer()
 
 
-def codeanim(func):
-    def codeanim_func(*args, pause: float | None = None, **kwargs):
-        func(*args, **kwargs)
-        delay.pause(end=pause)
+R = TypeVar("R")
+P = ParamSpec("P")
 
-    return codeanim_func
+
+# TODO: Find a way to annotate the additional pause keyword
+def codeanim(func: Callable[P, R]) -> Callable[P, R]:
+    def codeanim_func(
+        *args: P.args,
+        pause: float | None = None,  # type: ignore
+        **kwargs: P.kwargs,
+    ) -> R:
+        result = func(*args, **kwargs)
+        delay.pause(end=pause)
+        return result
+
+    return codeanim_func  # type: ignore
 
 
 def tap(key: str | Key, *, modifiers: list[str | Key] = []):
