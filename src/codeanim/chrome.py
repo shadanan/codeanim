@@ -17,9 +17,8 @@ def resize(position: tuple[int, int], size: tuple[int, int]):
 
 @core.codeanim
 def navigate(url: str):
-    with core.no_final_delay():
-        core.tap("l", modifiers=[Key.cmd])
-        core.write(url)
+    core.tap("l", modifiers=[Key.cmd])
+    core.write(url, pause=0)  # type: ignore
     core.tap(Key.enter)
 
 

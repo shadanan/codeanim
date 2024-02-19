@@ -7,6 +7,14 @@ APP_NAME = "Code"
 
 
 @core.codeanim
+def open(path: str):
+    if path.endswith(".code-workspace"):
+        core.open(path)
+    else:
+        core.code(path)
+
+
+@core.codeanim
 def activate():
     core.activate(APP_NAME)
 
@@ -26,8 +34,7 @@ def palette(cmd: str):
 @core.codeanim
 def newline(line: int = 0, *, above: bool = False):
     if line > 0:
-        with core.delay(**core.Delayer.NO_DELAYS):
-            jump(line)
+        jump(line, pause=0)  # type: ignore
         core.tap(Key.enter, modifiers=[Key.cmd, Key.shift])
     else:
         core.tap(Key.enter, modifiers=[Key.cmd, Key.shift] if above else [Key.cmd])
@@ -66,6 +73,22 @@ def end(*, select: bool = False):
 @core.codeanim
 def bottom(*, select: bool = False):
     core.tap(Key.down, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd])
+
+
+@core.codeanim
+def newfile():
+    core.tap("n", modifiers=[Key.cmd])
+
+
+@core.codeanim
+def save(file: str | None = None):
+    if file is None:
+        core.tap("s", modifiers=[Key.cmd])
+    else:
+        core.tap("s", modifiers=[Key.cmd, Key.shift])
+        core.delay.pause(0.5)
+        core.write(file)
+        core.tap(Key.enter)
 
 
 @core.codeanim
@@ -111,8 +134,3 @@ def clear_below(line: int):
     jump(line)
     core.tap(Key.down, modifiers=[Key.cmd, Key.shift])
     core.backspace()
-
-
-@core.codeanim
-def run():
-    core.tap(Key.enter, modifiers=[Key.cmd, Key.shift, Key.ctrl, Key.alt])

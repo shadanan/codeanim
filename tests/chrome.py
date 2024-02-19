@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-from codeanim import chrome
+from codeanim import KeyMonitor, chrome
+
+# Start the key monitor
+monitor = KeyMonitor()
+monitor.start()
 
 # Bring Chrome to the front
 chrome.activate()
@@ -21,6 +25,8 @@ chrome.navigate("https://www.youtube.com/@FriendlyTL")
 chrome.toggle_devtools()
 chrome.next_devtools_panel(times=2)
 chrome.refresh()
+
+monitor.wait()
 
 # Select previous tab
 chrome.previous_tab()
@@ -45,3 +51,5 @@ chrome.forward()
 
 # Close the window
 chrome.close_window()
+
+monitor.stop()
