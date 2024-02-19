@@ -58,15 +58,15 @@ class Delayer:
 
     def set(
         self,
+        end: float | None = None,
         *,
         tap: float | None = None,
         keys: dict[str | Key, float] | None = None,
-        end: float | None = None,
     ):
+        prev_end, self.end = self.end, self.end if end is None else end
         prev_tap, self.tap = self.tap, self.tap if tap is None else tap
         prev_keys, self.keys = self.keys, self.keys if keys is None else keys
-        prev_end, self.end = self.end, self.end if end is None else end
-        return prev_tap, prev_keys, prev_end
+        return prev_end, prev_tap, prev_keys
 
     def pause(self, end: float | None = None):
         end = self.end if end is None else end
@@ -75,14 +75,14 @@ class Delayer:
     @contextmanager
     def __call__(
         self,
+        end: float | None = None,
         *,
         tap: float | None = None,
         keys: dict[str | Key, float] | None = None,
-        end: float | None = None,
     ):
-        prev_tap, prev_keys, prev_end = self.set(tap=tap, keys=keys, end=end)
+        prev_end, prev_tap, prev_keys = self.set(end=end, tap=tap, keys=keys)
         yield
-        self.set(tap=prev_tap, keys=prev_keys, end=prev_end)
+        self.set(end=prev_end, tap=prev_tap, keys=prev_keys)
 
 
 delay = Delayer()
@@ -92,18 +92,16 @@ R = TypeVar("R")
 P = ParamSpec("P")
 
 
-# TODO: Find a way to annotate the additional pause keyword
 def codeanim(func: Callable[P, R]) -> Callable[P, R]:
     def codeanim_func(
         *args: P.args,
-        pause: float | None = None,  # type: ignore
         **kwargs: P.kwargs,
     ) -> R:
         result = func(*args, **kwargs)
-        delay.pause(end=pause)
+        delay.pause()
         return result
 
-    return codeanim_func  # type: ignore
+    return codeanim_func
 
 
 def tap(key: str | Key, *, modifiers: list[str | Key] = []):

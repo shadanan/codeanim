@@ -51,7 +51,7 @@ def main():
     )
     args = parser.parse_args()
 
-    delay.set(tap=args.tap_delay, end=args.end_delay)
+    delay.set(end=args.end_delay, tap=args.tap_delay)
 
     with KeyMonitor() as monitor:
         wait = monitor.wait  # noqa: F841
