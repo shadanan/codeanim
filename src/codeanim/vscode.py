@@ -34,7 +34,8 @@ def palette(cmd: str):
 @core.codeanim
 def newline(line: int = 0, *, above: bool = False):
     if line > 0:
-        jump(line, pause=0)  # type: ignore
+        with core.delay(0):
+            jump(line)
         core.tap(Key.enter, modifiers=[Key.cmd, Key.shift])
     else:
         core.tap(Key.enter, modifiers=[Key.cmd, Key.shift] if above else [Key.cmd])
