@@ -6,6 +6,7 @@ from . import chrome, core, markdown, vscode  # noqa: F401
 from .monitor import KeyMonitor
 
 # Public API
+Key = core.Key
 backspace = core.backspace
 delay = core.delay
 pause = core.delay.pause

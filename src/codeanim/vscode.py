@@ -98,13 +98,13 @@ def focus(file: str):
 
 
 @core.codeanim
-def focus_terminal():
-    core.tap("`", modifiers=[Key.ctrl])
+def focus_editor():
+    core.tap("1", modifiers=[Key.ctrl])
 
 
 @core.codeanim
-def focus_editor():
-    core.tap("1", modifiers=[Key.ctrl])
+def toggle_terminal():
+    core.tap("`", modifiers=[Key.ctrl])
 
 
 @core.codeanim
@@ -119,7 +119,7 @@ def toggle_primary_sidebar():
 
 @core.codeanim
 def clear_terminal():
-    focus_terminal()
+    toggle_terminal()
     core.tap("k", modifiers=[Key.cmd])
     focus_editor()
 

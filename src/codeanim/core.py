@@ -104,10 +104,11 @@ def codeanim(func: Callable[P, R]) -> Callable[P, R]:
     return codeanim_func
 
 
-def tap(key: str | Key, *, modifiers: list[str | Key] = []):
+def tap(key: str | Key, *, modifiers: list[str | Key] = [], repeat: int = 1):
     for modifier in modifiers:
         keyboard.press(modifier)
-    keyboard.tap(key)
+    for _ in range(repeat):
+        keyboard.tap(key)
     for modifier in modifiers:
         keyboard.release(modifier)
     time.sleep(delay.keys.get(key, delay.tap))

@@ -13,10 +13,10 @@ def parse(path: str, labels: list[str] | None, live: bool) -> list[str]:
             codeanim = len(tokens) > 1 and tokens[1] == "codeanim"
             label = tokens[2] if len(tokens) > 2 else ""
             is_codeanim = codeanim and (labels is None or label in labels)
-            continue
-        if line == "```":
             if is_codeanim and live:
                 codeanim_lines.append("wait()")
+            continue
+        if line == "```":
             is_codeanim = False
             continue
         if is_codeanim:
