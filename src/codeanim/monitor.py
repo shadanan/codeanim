@@ -1,3 +1,4 @@
+import time
 from threading import Event
 
 from pynput.keyboard import Key, KeyCode, Listener
@@ -34,7 +35,9 @@ class KeyMonitor:
     def wait(self, key: Key = Key.shift):
         if self.listener is None:
             raise RuntimeError("KeyMonitor is not running.")
-        print(f"Press and release {key.name} to continue")
+        time.sleep(0.01)  # Flush previous tap events
+        self.released = None
+        print(f"Tap {key.name} to continue")
         while key != self.released:
             self.press.wait()
             self.press.clear()

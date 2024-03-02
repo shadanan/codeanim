@@ -1,18 +1,31 @@
 import ast
 
 
-def parse(path: str, labels: list[str] | None, live: bool) -> list[str]:
+def parse(
+    path: str,
+    *,
+    live: bool = False,
+    labels: list[str] | None = None,
+    start_label: str | None = None,
+) -> list[str]:
     with open(path) as f:
         lines = f.read().splitlines()
 
     codeanim_lines = []
     is_codeanim = False
+    found_start_label = False
     for line in lines:
         if line.startswith("```python"):
             tokens = line.strip().split()
             codeanim = len(tokens) > 1 and tokens[1] == "codeanim"
             label = tokens[2] if len(tokens) > 2 else ""
-            is_codeanim = codeanim and (labels is None or label in labels)
+            if label == start_label:
+                found_start_label = True
+            is_codeanim = (
+                codeanim
+                and (labels is None or label in labels)
+                and (start_label is None or found_start_label)
+            )
             if is_codeanim and live:
                 codeanim_lines.append("wait()")
             continue
