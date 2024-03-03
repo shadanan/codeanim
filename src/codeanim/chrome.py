@@ -1,89 +1,89 @@
 from pynput.keyboard import Key
 
-from . import core
+from .core import CodeAnim
 
 APP_NAME = "Google Chrome"
 
 
-@core.codeanim
-def activate():
-    core.activate(APP_NAME)
+@CodeAnim.cmd
+def activate(ca: CodeAnim):
+    ca.shell.activate(APP_NAME)
 
 
-@core.codeanim
-def resize(position: tuple[int, int], size: tuple[int, int]):
-    core.resize(APP_NAME, position, size)
+@CodeAnim.cmd
+def resize(ca: CodeAnim, position: tuple[int, int], size: tuple[int, int]):
+    ca.shell.resize(APP_NAME, position, size)
 
 
-@core.codeanim
-def navigate(url: str):
-    core.tap("l", modifiers=[Key.cmd])
-    with core.delay(0):
-        core.write(url)
-    core.tap(Key.enter)
+@CodeAnim.cmd
+def navigate(ca: CodeAnim, url: str):
+    ca.tap("l", modifiers=[Key.cmd])
+    with ca.delay(0):
+        ca.write(url)
+    ca.tap(Key.enter)
 
 
-@core.codeanim
-def back():
-    core.tap(Key.left, modifiers=[Key.cmd])
+@CodeAnim.cmd
+def back(ca: CodeAnim):
+    ca.tap(Key.left, modifiers=[Key.cmd])
 
 
-@core.codeanim
-def forward():
-    core.tap(Key.right, modifiers=[Key.cmd])
+@CodeAnim.cmd
+def forward(ca: CodeAnim):
+    ca.tap(Key.right, modifiers=[Key.cmd])
 
 
-@core.codeanim
-def new_tab():
-    core.tap("t", modifiers=[Key.cmd])
-    core.tap(Key.esc)
+@CodeAnim.cmd
+def new_tab(ca: CodeAnim):
+    ca.tap("t", modifiers=[Key.cmd])
+    ca.tap(Key.esc)
 
 
-@core.codeanim
-def previous_tab(times: int = 1):
+@CodeAnim.cmd
+def previous_tab(ca: CodeAnim, times: int = 1):
     for _ in range(times):
-        core.tap("{", modifiers=[Key.cmd, Key.shift])
+        ca.tap("{", modifiers=[Key.cmd, Key.shift])
 
 
-@core.codeanim
-def next_tab(times: int = 1):
+@CodeAnim.cmd
+def next_tab(ca: CodeAnim, times: int = 1):
     for _ in range(times):
-        core.tap("}", modifiers=[Key.cmd, Key.shift])
+        ca.tap("}", modifiers=[Key.cmd, Key.shift])
 
 
-@core.codeanim
-def close_tab():
-    core.tap("w", modifiers=[Key.cmd])
+@CodeAnim.cmd
+def close_tab(ca: CodeAnim):
+    ca.tap("w", modifiers=[Key.cmd])
 
 
-@core.codeanim
-def new_window():
-    core.tap("n", modifiers=[Key.cmd])
-    core.tap(Key.esc)
+@CodeAnim.cmd
+def new_window(ca: CodeAnim):
+    ca.tap("n", modifiers=[Key.cmd])
+    ca.tap(Key.esc)
 
 
-@core.codeanim
-def close_window():
-    core.tap("w", modifiers=[Key.cmd, Key.shift])
+@CodeAnim.cmd
+def close_window(ca: CodeAnim):
+    ca.tap("w", modifiers=[Key.cmd, Key.shift])
 
 
-@core.codeanim
-def refresh():
-    core.tap("r", modifiers=[Key.cmd])
+@CodeAnim.cmd
+def refresh(ca: CodeAnim):
+    ca.tap("r", modifiers=[Key.cmd])
 
 
-@core.codeanim
-def toggle_devtools():
-    core.tap("i", modifiers=[Key.cmd, Key.alt])
+@CodeAnim.cmd
+def toggle_devtools(ca: CodeAnim):
+    ca.tap("i", modifiers=[Key.cmd, Key.alt])
 
 
-@core.codeanim
-def prev_devtools_panel(times: int = 1):
+@CodeAnim.cmd
+def prev_devtools_panel(ca: CodeAnim, times: int = 1):
     for _ in range(times):
-        core.tap("[", modifiers=[Key.cmd])
+        ca.tap("[", modifiers=[Key.cmd])
 
 
-@core.codeanim
-def next_devtools_panel(times: int = 1):
+@CodeAnim.cmd
+def next_devtools_panel(ca: CodeAnim, times: int = 1):
     for _ in range(times):
-        core.tap("]", modifiers=[Key.cmd])
+        ca.tap("]", modifiers=[Key.cmd])
