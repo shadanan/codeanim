@@ -28,6 +28,11 @@ def main():
         help="The list of labeled CodeAnim blocks to execute",
     )
     parser.add_argument(
+        "--start-label",
+        default=None,
+        help="The label of the CodeAnim block to start from",
+    )
+    parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
@@ -56,7 +61,12 @@ def main():
 
     with KeyMonitor() as monitor:
         wait = monitor.wait  # noqa: F841
-        expressions = markdown.parse(args.markdown, args.labels, args.live)
+        expressions = markdown.parse(
+            args.markdown,
+            live=args.live,
+            labels=args.labels,
+            start_label=args.start_label,
+        )
         for expression in expressions:
             if args.verbose:
                 print(expression)
