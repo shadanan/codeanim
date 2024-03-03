@@ -1,10 +1,18 @@
-[project]
+[tool.poetry]
 name = "codeanim"
 version = "0.0.9"
-authors = [{ name = "Shad Sharma", email = "shadanan@gmail.com" }]
-description = "A tool to animate VS Code"
-dependencies = ["pynput", "pyperclip"]
+description = "A tool that automates presentation of software demos."
+authors = ["Shad Sharma <shadanan@gmail.com>"]
 readme = "README.md"
 
-[project.scripts]
+[tool.poetry.dependencies]
+python = "^3.12"
+pynput = "^1.7.6"
+pyperclip = "^1.8.2"
+
+[tool.poetry.scripts]
 codeanim = "codeanim:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
