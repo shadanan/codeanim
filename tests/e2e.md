@@ -25,7 +25,7 @@ vscode.save("scratch.py")
 Execute the script using the terminal
 
 ```python codeanim
-vscode.focus_terminal()
+vscode.toggle_terminal()
 write("python3 scratch.py\n")
 ```
 

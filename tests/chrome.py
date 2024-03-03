@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-from codeanim import KeyMonitor, chrome
+from codeanim import chrome, codeanim
 
 # Start the key monitor
-monitor = KeyMonitor()
-monitor.start()
+codeanim.start()
 
 # Bring Chrome to the front
 chrome.activate()
@@ -26,7 +25,7 @@ chrome.toggle_devtools()
 chrome.next_devtools_panel(times=2)
 chrome.refresh()
 
-monitor.wait()
+codeanim.wait()
 
 # Select previous tab
 chrome.previous_tab()
@@ -52,4 +51,4 @@ chrome.forward()
 # Close the window
 chrome.close_window()
 
-monitor.stop()
+codeanim.stop()

@@ -3,16 +3,17 @@ import argparse
 import os
 
 from . import chrome, core, markdown, vscode  # noqa: F401
-from .monitor import KeyMonitor
+from .core import codeanim
 
 # Public API
 Key = core.Key
-backspace = core.backspace
-delay = core.delay
-pause = core.delay.pause
-paste = core.paste
-tap = core.tap
-write = core.write
+backspace = codeanim.backspace
+delay = codeanim.delay
+pause = codeanim.delay.pause
+paste = codeanim.paste
+tap = codeanim.tap
+wait = codeanim.wait
+write = codeanim.write
 
 
 def main():
@@ -59,8 +60,7 @@ def main():
 
     delay.set(end=args.end_delay, tap=args.tap_delay)
 
-    with KeyMonitor() as monitor:
-        wait = monitor.wait  # noqa: F841
+    with codeanim:
         expressions = markdown.parse(
             args.markdown,
             live=args.live,
