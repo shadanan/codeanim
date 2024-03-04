@@ -8,15 +8,7 @@ jobs:
         with:
           fetch-depth: 0
       - run: |
-          if [ "$(git branch --show-current)" == "main" ]; then
-            echo "Skipping version check on main branch"
-            exit 1
-          fi
-
-          if [ "$(git show origin/main:pyproject.toml | grep version)" != "$(cat pyproject.toml | grep version)" ]; then
-            echo "Version was bumped"
-            exit 1
-          fi
-
-          echo "Version was not bumped"
-          exit 0
+          [[
+            "$(git branch --show-current)" != "main" &&
+            "$(git show main:pyproject.toml | grep version)" != "$(cat pyproject.toml | grep version)"
+          ]]
