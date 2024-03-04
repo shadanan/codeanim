@@ -9,6 +9,6 @@ jobs:
           fetch-depth: 0
       - run: |
           [[
-            "$(git branch --show-current)" != "main" &&
+            "$(git branch --show-current)" == "main" ||
             "$(git show origin/main:pyproject.toml | grep version)" != "$(cat pyproject.toml | grep version)"
           ]]
