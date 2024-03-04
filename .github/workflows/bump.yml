@@ -1,15 +1,20 @@
 name: Ensure Version Bump
 on: [push, pull_request]
 jobs:
-  ruff:
+  bump:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: |
-          if [[ 
-            $(git rev-parse --abbrev-ref HEAD) != "main" &&
-            $(git show main:pyproject.toml | grep version) != $(cat pyproject.toml | grep version)
-          ]]; then
-            echo "Version bump required"
-            exit 1
+          if [ "$(git branch --show-current)" == "main" ]; then
+            echo "Skipping version check on main branch"
+            exit 0
           fi
+
+          if [ "$(git show main:pyproject.toml | grep version)" != "$(cat pyproject.toml | grep version)" ]; then
+            echo "Version was bumped"
+            exit 0
+          fi
+
+          echo "Version was not bumped"
+          exit 1
