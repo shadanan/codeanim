@@ -10,5 +10,5 @@ jobs:
       - run: |
           [[
             "$(git branch --show-current)" != "main" &&
-            "$(git show main:pyproject.toml | grep version)" != "$(cat pyproject.toml | grep version)"
+            "$(git show origin/main:pyproject.toml | grep version)" != "$(cat pyproject.toml | grep version)"
           ]]
