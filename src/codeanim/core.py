@@ -16,6 +16,8 @@ class CodeAnim:
     def __init__(self):
         self.delay = Delayer()
         self.keyboard = Keyboard()
+        self.backspace = backspace
+        self.write = write
         self.shell = shell
 
     def __enter__(self):
@@ -59,20 +61,24 @@ class CodeAnim:
         self.tap("v", modifiers=[Key.cmd])
         time.sleep(paste_delay)  # Need to wait for the paste to finish
 
-    def write(self, text: str):
-        for char in text:
-            if char == "\n":
-                self.tap(Key.enter)
-            elif char == "\t":
-                self.tap(Key.tab)
-            elif len(char.encode("utf-8")) != 1:
-                self.paste(char)
-            else:
-                self.tap(char)
 
-    def backspace(self, num: int = 1):
-        for _ in range(num):
-            self.tap(Key.backspace)
+@CodeAnim.cmd
+def write(ca: CodeAnim, text: str):
+    for char in text:
+        if char == "\n":
+            ca.tap(Key.enter)
+        elif char == "\t":
+            ca.tap(Key.tab)
+        elif len(char.encode("utf-8")) != 1:
+            ca.paste(char)
+        else:
+            ca.tap(char)
+
+
+@CodeAnim.cmd
+def backspace(ca: CodeAnim, num: int = 1):
+    for _ in range(num):
+        ca.tap(Key.backspace)
 
 
 codeanim = CodeAnim()
