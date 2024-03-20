@@ -10,7 +10,7 @@ vscode.resize((0, 25), (1024, 768))
 Open the demo project, resize VS Code.
 
 ```python codeanim
-vscode.newfile()
+vscode.new_file()
 write('print("Hello, World!")\n')
 vscode.save("scratch.py")
 ```

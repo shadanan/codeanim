@@ -74,7 +74,7 @@ def bottom(ca: CodeAnim, *, select: bool = False):
 
 
 @CodeAnim.cmd
-def newfile(ca: CodeAnim):
+def new_file(ca: CodeAnim):
     ca.tap("n", modifiers=[Key.cmd])
 
 

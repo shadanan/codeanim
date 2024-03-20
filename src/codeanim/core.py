@@ -19,6 +19,7 @@ class CodeAnim:
         self.backspace = backspace
         self.write = write
         self.shell = shell
+        self._call_stack = []
 
     def __enter__(self):
         self.start()
@@ -39,8 +40,11 @@ class CodeAnim:
             *args: P.args,
             **kwargs: P.kwargs,
         ) -> R:
+            codeanim._call_stack.append(func.__name__)
             result = func(codeanim, *args, **kwargs)
-            codeanim.delay.pause()
+            codeanim._call_stack.pop()
+            if len(codeanim._call_stack) == 0:
+                codeanim.delay.pause()
             return result
 
         return codeanim_func
