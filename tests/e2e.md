@@ -39,6 +39,12 @@ vscode.palette(">python.execInTerminal")
 
 Run the script using the palette command
 
+```python codeanim
+click((934, 78))
+```
+
+Run the script by clicking the run button
+
 ## Chrome Tests
 
 ```python codeanim chrome

@@ -3,6 +3,7 @@ from typing import Callable, Concatenate, ParamSpec, TypeVar
 
 import pyperclip
 from pynput.keyboard import Key
+from pynput.mouse import Controller
 
 from . import shell
 from .delayer import Delayer
@@ -16,11 +17,14 @@ class CodeAnim:
     def __init__(self):
         self.delay = Delayer()
         self.keyboard = Keyboard()
+        self.mouse = Controller()
         self.backspace = backspace
+
         self.paste = paste
         self.shell = shell
         self.tap = tap
         self.write = write
+
         self._call_stack = []
 
     def __enter__(self):
