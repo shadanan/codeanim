@@ -18,6 +18,12 @@ vscode.save("scratch.py")
 Create a new file, add hello world, and save it as scratch.py.
 
 ```python codeanim
+click((934, 78))
+```
+
+Run the script by clicking the run button
+
+```python codeanim
 vscode.toggle_terminal()
 write("python3 scratch.py\n")
 ```
@@ -38,12 +44,6 @@ vscode.palette(">python.execInTerminal")
 ```
 
 Run the script using the palette command
-
-```python codeanim
-click((934, 78))
-```
-
-Run the script by clicking the run button
 
 ## Chrome Tests
 
