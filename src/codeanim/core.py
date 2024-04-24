@@ -3,6 +3,7 @@ from typing import Callable, Concatenate, ParamSpec, TypeVar
 
 import pyperclip
 from pynput.keyboard import Key
+from pynput.mouse import Controller
 
 from . import shell
 from .delayer import Delayer
@@ -16,9 +17,14 @@ class CodeAnim:
     def __init__(self):
         self.delay = Delayer()
         self.keyboard = Keyboard()
+        self.mouse = Controller()
         self.backspace = backspace
-        self.write = write
+
+        self.paste = paste
         self.shell = shell
+        self.tap = tap
+        self.write = write
+
         self._call_stack = []
 
     def __enter__(self):
@@ -49,21 +55,25 @@ class CodeAnim:
 
         return codeanim_func
 
-    def tap(self, key: str | Key, *, modifiers: list[str | Key] = [], repeat: int = 1):
-        self.keyboard.tap(
-            key,
-            modifiers=modifiers,
-            repeat=repeat,
-            delay=self.delay.keys.get(key, self.delay.tap),
-        )
-
     def wait(self, key: Key = Key.shift):
         self.keyboard.wait(key)
 
-    def paste(self, text: str, *, paste_delay: float = 0.5):
-        pyperclip.copy(text)
-        self.tap("v", modifiers=[Key.cmd])
-        time.sleep(paste_delay)  # Need to wait for the paste to finish
+
+@CodeAnim.cmd
+def paste(ca: CodeAnim, text: str, *, paste_delay: float = 0.5):
+    pyperclip.copy(text)
+    ca.tap("v", modifiers=[Key.cmd])
+    time.sleep(paste_delay)  # Need to wait for the paste to finish
+
+
+@CodeAnim.cmd
+def tap(ca: CodeAnim, key: str | Key, *, modifiers: list[Key] = [], repeat: int = 1):
+    ca.keyboard.tap(
+        key,
+        modifiers=modifiers,
+        repeat=repeat,
+        delay=ca.delay.keys.get(key, ca.delay.tap),
+    )
 
 
 @CodeAnim.cmd

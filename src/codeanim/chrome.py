@@ -18,8 +18,7 @@ def resize(ca: CodeAnim, position: tuple[int, int], size: tuple[int, int]):
 @CodeAnim.cmd
 def navigate(ca: CodeAnim, url: str):
     ca.tap("l", modifiers=[Key.cmd])
-    with ca.delay(0):
-        ca.write(url)
+    ca.write(url)
     ca.tap(Key.enter)
 
 

@@ -33,8 +33,7 @@ def palette(ca: CodeAnim, cmd: str):
 @CodeAnim.cmd
 def newline(ca: CodeAnim, line: int = 0, *, above: bool = False):
     if line > 0:
-        with ca.delay(0):
-            jump(line)
+        jump(line)
         ca.tap(Key.enter, modifiers=[Key.cmd, Key.shift])
     else:
         ca.tap(Key.enter, modifiers=[Key.cmd, Key.shift] if above else [Key.cmd])

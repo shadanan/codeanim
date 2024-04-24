@@ -43,7 +43,7 @@ class Keyboard:
         self,
         key: str | Key,
         *,
-        modifiers: list[str | Key] = [],
+        modifiers: list[Key] = [],
         repeat: int = 1,
         delay: float = 0,
     ):

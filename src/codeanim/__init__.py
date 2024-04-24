@@ -2,11 +2,14 @@
 import argparse
 import os
 
-from . import chrome, core, markdown, vscode  # noqa: F401
+from pynput.keyboard import Key  # noqa: F401
+from pynput.mouse import Button  # noqa: F401
+
+from . import chrome, core, interpolators, markdown, vscode  # noqa: F401
 from .core import codeanim
+from .mouse import click, move  # noqa: F401
 
 # Public API
-Key = core.Key
 backspace = codeanim.backspace
 delay = codeanim.delay
 pause = codeanim.delay.pause
