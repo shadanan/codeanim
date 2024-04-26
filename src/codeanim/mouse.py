@@ -1,4 +1,3 @@
-import math
 import time
 
 from pynput.mouse import Button
@@ -9,8 +8,8 @@ from .interpolators import Interpolator, Spring
 Point = tuple[int, int]
 
 
-def is_within_epsilon(p1: Point, p2: Point) -> bool:
-    return math.sqrt((p2[1] - p1[1]) ** 2 + (p2[0] - p1[0]) ** 2) < 2
+def done(position: float, velocity: float) -> bool:
+    return abs(1 - position) < 0.001 and velocity < 0.01
 
 
 @CodeAnim.cmd
@@ -19,7 +18,8 @@ def move(
     end: Point,
     *,
     start: Point | None = None,
-    steps: int = 100,
+    steps: int = 1000,
+    step_size: float = 0.01,
     delay: float = 0.01,
     interpolator: Interpolator = Spring(),
 ):
@@ -27,12 +27,12 @@ def move(
         start = ca.mouse.position
 
     delta = end[0] - start[0], end[1] - start[1]
+
     for step in range(steps):
-        ft = interpolator(step / steps)
-        pos = int(start[0] + delta[0] * ft), int(start[1] + delta[1] * ft)
-        if is_within_epsilon(pos, end):
+        pt, vt = interpolator(step * step_size)
+        if done(pt, vt):
             break
-        ca.mouse.position = pos
+        ca.mouse.position = int(start[0] + delta[0] * pt), int(start[1] + delta[1] * pt)
         time.sleep(delay)
     ca.mouse.position = end
 
