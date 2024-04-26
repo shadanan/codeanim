@@ -8,7 +8,7 @@ from pynput.mouse import Button  # noqa: F401
 from . import chrome, core, markdown, vscode  # noqa: F401
 from .core import codeanim
 from .interpolators import Sigmoid, Spring  # noqa: F401
-from .mouse import click, move  # noqa: F401
+from .mouse import click, drag, move  # noqa: F401
 
 # Public API
 backspace = codeanim.backspace

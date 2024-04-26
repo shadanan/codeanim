@@ -18,8 +18,8 @@ class CodeAnim:
         self.delay = Delayer()
         self.keyboard = Keyboard()
         self.mouse = Controller()
-        self.backspace = backspace
 
+        self.backspace = backspace
         self.paste = paste
         self.shell = shell
         self.tap = tap
