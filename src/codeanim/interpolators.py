@@ -4,29 +4,25 @@ from typing import Protocol
 
 
 class Interpolator(Protocol):
-    def __call__(self, t: float) -> float: ...
+    def __call__(self, t: float) -> tuple[float, float]: ...
 
 
 @dataclass
 class Sigmoid(Interpolator):
-    scale: float = 10
+    speed: float = 4
+    offset: float = 8
 
-    def __call__(self, t: float) -> float:
-        return 1 / (1 + math.exp((0.5 - t) * self.scale))
+    def __call__(self, t: float) -> tuple[float, float]:
+        exp = math.exp(self.offset - t * self.speed**2)
+        return 1 / (1 + exp), abs(exp / (1 + exp**2))
 
 
 @dataclass
 class Spring(Interpolator):
-    mass: float = 1
-    stiffness: float = 1
-    damping: float = 2
-    scale: float = 10
+    gamma: float = 10
+    omega: float = 0
 
-    def __post_init__(self):
-        self.omega = math.sqrt(self.stiffness / self.mass)
-        self.zeta = self.damping / (2 * math.sqrt(self.stiffness * self.mass))
-
-    def __call__(self, t: float) -> float:
-        return 1 - math.exp(-self.zeta * self.omega * t * self.scale) * math.cos(
-            self.omega * math.sqrt(1 - self.zeta**2) * t * self.scale
-        )
+    def __call__(self, t: float) -> tuple[float, float]:
+        exp = math.exp(-self.gamma * t)
+        cos, sin = math.cos(self.omega * t), math.sin(self.omega * t)
+        return 1 - exp * cos, abs(exp * (self.gamma * cos + self.omega * sin))

@@ -1,10 +1,21 @@
 # End-to-End Tests
 
+## Mouse Tests
+
+```python codeanim mouse
+move((300, 300))
+move((1200, 300), interpolator=Sigmoid())
+move((1200, 900), interpolator=Sigmoid(speed=2))
+move((300, 300), interpolator=Spring(gamma=2, omega=4))
+```
+
+Move the mouse around.
+
 ## VS Code Tests
 
 ```python codeanim vscode
 vscode.open("demo")
-vscode.resize((0, 25), (1024, 768))
+vscode.resize((50, 50), (1024, 768))
 ```
 
 Open the demo project, resize VS Code.
@@ -18,7 +29,7 @@ vscode.save("scratch.py")
 Create a new file, add hello world, and save it as scratch.py.
 
 ```python codeanim
-click((934, 78))
+click((984, 103))
 ```
 
 Run the script by clicking the run button
@@ -49,7 +60,7 @@ Run the script using the palette command
 
 ```python codeanim chrome
 chrome.activate()
-chrome.resize((50, 75), (1024, 768))
+chrome.resize((75, 75), (1024, 768))
 ```
 
 Activate Chrome and resize it.
