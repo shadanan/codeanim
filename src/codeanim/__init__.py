@@ -5,16 +5,19 @@ import os
 from pynput.keyboard import Key  # noqa: F401
 from pynput.mouse import Button  # noqa: F401
 
-from . import chrome, core, markdown, vscode  # noqa: F401
+from . import chrome, vscode  # noqa: F401
 from .core import codeanim
 from .interpolators import Sigmoid, Spring  # noqa: F401
-from .mouse import click, drag, move  # noqa: F401
+from .markdown import parse
 
 # Public API
 backspace = codeanim.backspace
+click = codeanim.click
 delay = codeanim.delay
-pause = codeanim.delay.pause
+drag = codeanim.drag
+move = codeanim.move
 paste = codeanim.paste
+pause = codeanim.delay.pause
 tap = codeanim.tap
 wait = codeanim.wait
 write = codeanim.write
@@ -65,7 +68,7 @@ def main():
     delay.set(end=args.end_delay, tap=args.tap_delay)
 
     with codeanim:
-        expressions = markdown.parse(
+        expressions = parse(
             args.markdown,
             live=args.live,
             labels=args.labels,

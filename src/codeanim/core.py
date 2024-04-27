@@ -3,10 +3,11 @@ from typing import Callable, Concatenate, ParamSpec, TypeVar
 
 import pyperclip
 from pynput.keyboard import Key
-from pynput.mouse import Controller
+from pynput.mouse import Button, Controller
 
 from . import shell
 from .delayer import Delayer
+from .interpolators import Interpolator, Spring
 from .keyboard import Keyboard
 
 R = TypeVar("R")
@@ -18,11 +19,15 @@ class CodeAnim:
         self.delay = Delayer()
         self.keyboard = Keyboard()
         self.mouse = Controller()
+        self.shell = shell
 
         self.backspace = backspace
+        self.click = click
+        self.drag = drag
+        self.move = move
         self.paste = paste
-        self.shell = shell
         self.tap = tap
+        self.wait = self.keyboard.wait
         self.write = write
 
         self._call_stack = []
@@ -55,8 +60,66 @@ class CodeAnim:
 
         return codeanim_func
 
-    def wait(self, key: Key = Key.shift):
-        self.keyboard.wait(key)
+
+@CodeAnim.cmd
+def backspace(ca: CodeAnim, num: int = 1):
+    for _ in range(num):
+        ca.tap(Key.backspace)
+
+
+@CodeAnim.cmd
+def click(
+    ca: CodeAnim,
+    pos: tuple[int, int] | None = None,
+    button: Button = Button.left,
+    count: int = 1,
+    *,
+    start: tuple[int, int] | None = None,
+    interpolator: Interpolator = Spring(),
+):
+    if pos is not None:
+        move(pos, start=start, interpolator=interpolator)
+    ca.mouse.click(button, count)
+
+
+@CodeAnim.cmd
+def drag(
+    ca: CodeAnim,
+    start: tuple[int, int],
+    end: tuple[int, int],
+    button: Button = Button.left,
+    *,
+    interpolator: Interpolator = Spring(),
+):
+    move(start, interpolator=interpolator)
+    ca.mouse.press(button)
+    move(end, interpolator=interpolator)
+    ca.mouse.release(button)
+
+
+@CodeAnim.cmd
+def move(
+    ca: CodeAnim,
+    end: tuple[int, int],
+    *,
+    start: tuple[int, int] | None = None,
+    steps: int = 1000,
+    step_size: float = 0.01,
+    delay: float = 0.01,
+    interpolator: Interpolator = Spring(),
+):
+    if start is None:
+        start = ca.mouse.position
+
+    delta = end[0] - start[0], end[1] - start[1]
+
+    for step in range(steps):
+        pt, vt = interpolator(step * step_size)
+        if done(pt, vt):
+            break
+        ca.mouse.position = int(start[0] + delta[0] * pt), int(start[1] + delta[1] * pt)
+        time.sleep(delay)
+    ca.mouse.position = end
 
 
 @CodeAnim.cmd
@@ -68,12 +131,13 @@ def paste(ca: CodeAnim, text: str, *, paste_delay: float = 0.5):
 
 @CodeAnim.cmd
 def tap(ca: CodeAnim, key: str | Key, *, modifiers: list[Key] = [], repeat: int = 1):
-    ca.keyboard.tap(
-        key,
-        modifiers=modifiers,
-        repeat=repeat,
-        delay=ca.delay.keys.get(key, ca.delay.tap),
-    )
+    for modifier in modifiers:
+        ca.keyboard.controller.press(modifier)
+    for _ in range(repeat):
+        ca.keyboard.controller.tap(key)
+        time.sleep(ca.delay.keys.get(key, ca.delay.tap))
+    for modifier in modifiers:
+        ca.keyboard.controller.release(modifier)
 
 
 @CodeAnim.cmd
@@ -89,10 +153,8 @@ def write(ca: CodeAnim, text: str):
             ca.tap(char)
 
 
-@CodeAnim.cmd
-def backspace(ca: CodeAnim, num: int = 1):
-    for _ in range(num):
-        ca.tap(Key.backspace)
+def done(position: float, velocity: float) -> bool:
+    return abs(1 - position) < 0.001 and velocity < 0.01
 
 
 codeanim = CodeAnim()
