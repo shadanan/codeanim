@@ -50,3 +50,18 @@ def click(
     if pos is not None:
         move(pos, start=start, interpolator=interpolator)
     ca.mouse.click(button, count)
+
+
+@CodeAnim.cmd
+def drag(
+    ca: CodeAnim,
+    start: Point,
+    end: Point,
+    button: Button = Button.left,
+    *,
+    interpolator: Interpolator = Spring(),
+):
+    move(start, interpolator=interpolator)
+    ca.mouse.press(button)
+    move(end, interpolator=interpolator)
+    ca.mouse.release(button)
