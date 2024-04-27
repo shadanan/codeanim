@@ -6,7 +6,7 @@ from pynput.keyboard import Controller, Key, KeyCode, Listener
 
 class Keyboard:
     def __init__(self):
-        self.keyboard = Controller()
+        self.controller = Controller()
         self.press = Event()
         self.released: Key | KeyCode | None = None
         self.listener: Listener | None = None
@@ -38,22 +38,6 @@ class Keyboard:
             self.listener.stop()
             self.listener.join()
             self.listener = None
-
-    def tap(
-        self,
-        key: str | Key,
-        *,
-        modifiers: list[Key] = [],
-        repeat: int = 1,
-        delay: float = 0,
-    ):
-        for modifier in modifiers:
-            self.keyboard.press(modifier)
-        for _ in range(repeat):
-            self.keyboard.tap(key)
-            time.sleep(delay)
-        for modifier in modifiers:
-            self.keyboard.release(modifier)
 
     def wait(self, key: Key = Key.shift):
         if self.listener is None or not self.listener.is_alive():
