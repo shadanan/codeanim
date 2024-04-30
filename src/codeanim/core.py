@@ -26,6 +26,7 @@ class CodeAnim:
         self.drag = drag
         self.move = move
         self.paste = paste
+        self.scroll = scroll
         self.tap = tap
         self.wait = self.keyboard.wait
         self.write = write
@@ -51,6 +52,8 @@ class CodeAnim:
             *args: P.args,
             **kwargs: P.kwargs,
         ) -> R:
+            if codeanim.keyboard.aborted:
+                raise Exception("aborted")
             codeanim._call_stack.append(func.__name__)
             result = func(codeanim, *args, **kwargs)
             codeanim._call_stack.pop()
@@ -127,6 +130,11 @@ def paste(ca: CodeAnim, text: str, *, paste_delay: float = 0.5):
     pyperclip.copy(text)
     ca.tap("v", modifiers=[Key.cmd])
     time.sleep(paste_delay)  # Need to wait for the paste to finish
+
+
+@CodeAnim.cmd
+def scroll(ca: CodeAnim, dx: int, dy: int):
+    ca.mouse.scroll(dx, dy)
 
 
 @CodeAnim.cmd
