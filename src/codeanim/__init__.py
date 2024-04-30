@@ -2,6 +2,7 @@
 import argparse
 import os
 from functools import partial
+from importlib.metadata import version
 
 from pynput.keyboard import Key  # noqa: F401
 from pynput.mouse import Button  # noqa: F401
@@ -71,7 +72,16 @@ def main():
         type=partial(getattr, Key),
         help="Abort CodeAnim execution when this key is pressed",
     )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        help="Print the version information and exit",
+    )
     args = parser.parse_args()
+
+    if args.version:
+        print(version("codeanim"))
+        return
 
     delay.set(end=args.end_delay, tap=args.tap_delay)
     codeanim.keyboard.set_abort_key(args.abort_key)
