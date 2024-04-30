@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
+from functools import partial
 
 from pynput.keyboard import Key  # noqa: F401
 from pynput.mouse import Button  # noqa: F401
@@ -18,6 +19,7 @@ drag = codeanim.drag
 move = codeanim.move
 paste = codeanim.paste
 pause = codeanim.delay.pause
+scroll = codeanim.scroll
 tap = codeanim.tap
 wait = codeanim.wait
 write = codeanim.write
@@ -63,9 +65,16 @@ def main():
         action="store_true",
         help="Insert wait after each codeanim block",
     )
+    parser.add_argument(
+        "--abort-key",
+        default=Key.shift_r,
+        type=partial(getattr, Key),
+        help="Abort CodeAnim execution when this key is pressed",
+    )
     args = parser.parse_args()
 
     delay.set(end=args.end_delay, tap=args.tap_delay)
+    codeanim.keyboard.set_abort_key(args.abort_key)
 
     with codeanim:
         expressions = parse(

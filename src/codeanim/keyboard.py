@@ -5,13 +5,22 @@ from pynput.keyboard import Controller, Key, KeyCode, Listener
 
 
 class Keyboard:
-    def __init__(self):
+    def __init__(self, abort_key: Key = Key.shift_r):
         self.controller = Controller()
         self.press = Event()
         self.released: Key | KeyCode | None = None
         self.listener: Listener | None = None
 
+        self.aborted = False
+        self.abort_key = abort_key
+
+    def set_abort_key(self, key: Key):
+        self.abort_key = key
+
     def handle_press(self, key: Key | KeyCode | None):
+        if key == self.abort_key:
+            self.aborted = True
+            print(f"Aborting because {key} was pressed...")
         pass
 
     def handle_release(self, key: Key | KeyCode | None):
