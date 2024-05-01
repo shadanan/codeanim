@@ -26,6 +26,12 @@ wait = codeanim.wait
 write = codeanim.write
 
 
+class VersionAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        print(version("codeanim"))
+        parser.exit()
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -74,14 +80,11 @@ def main():
     )
     parser.add_argument(
         "--version",
-        action="store_true",
+        nargs=0,
+        action=VersionAction,
         help="Print the version information and exit",
     )
     args = parser.parse_args()
-
-    if args.version:
-        print(version("codeanim"))
-        return
 
     delay.set(end=args.end_delay, tap=args.tap_delay)
     codeanim.keyboard.set_abort_key(args.abort_key)
