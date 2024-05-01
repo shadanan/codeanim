@@ -155,6 +155,8 @@ def write(ca: CodeAnim, text: str):
             ca.tap(Key.enter)
         elif char == "\t":
             ca.tap(Key.tab)
+        elif char == "\b":
+            ca.tap(Key.backspace)
         elif len(char.encode("utf-8")) != 1:
             ca.paste(char)
         else:
