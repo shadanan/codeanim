@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codeanim"
-version = "0.0.22"
+version = "0.0.23"
 description = "A tool that automates presentation of software demos."
 authors = ["Shad Sharma <shadanan@gmail.com>"]
 readme = "README.md"

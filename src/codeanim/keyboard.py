@@ -54,6 +54,6 @@ class Keyboard:
         time.sleep(0.01)  # Flush previous tap events
         self.released = None
         print(f"Tap {key.name} to continue")
-        while key != self.released:
+        while key != self.released and not self.aborted:
             self.press.wait()
             self.press.clear()
