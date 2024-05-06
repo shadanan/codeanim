@@ -120,7 +120,10 @@ def move(
         pt, vt = interpolator(step * step_size)
         if done(pt, vt):
             break
-        ca.mouse.position = int(start[0] + delta[0] * pt), int(start[1] + delta[1] * pt)
+        ca.mouse.position = (
+            round(start[0] + delta[0] * pt),
+            round(start[1] + delta[1] * pt),
+        )
         time.sleep(delay)
     ca.mouse.position = end
 
