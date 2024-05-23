@@ -21,10 +21,11 @@ def parse(
             label = tokens[2] if len(tokens) > 2 else ""
             if label == start_label:
                 found_start_label = True
-            is_codeanim = (
-                codeanim
-                and (labels is None or label in labels)
-                and (start_label is None or found_start_label)
+            is_codeanim = codeanim and (
+                labels is None
+                or label in labels
+                or start_label is None
+                or found_start_label
             )
             if is_codeanim and live:
                 codeanim_lines.append("wait()")
