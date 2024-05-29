@@ -22,9 +22,8 @@ def parse(
             if label == start_label:
                 found_start_label = True
             is_codeanim = codeanim and (
-                labels is None
-                or label in labels
-                or start_label is None
+                (labels is None and start_label is None)
+                or (labels is not None and label in labels)
                 or found_start_label
             )
             if is_codeanim and live:
