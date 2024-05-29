@@ -15,4 +15,6 @@ jobs:
           pip install poetry
           poetry install --with dev
       - name: Run pytest
+        env:
+          PYNPUT_BACKEND: dummy
         run: poetry run pytest
