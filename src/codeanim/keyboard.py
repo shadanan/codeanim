@@ -5,7 +5,7 @@ from pynput.keyboard import Controller, Key, KeyCode, Listener
 
 
 class Keyboard:
-    def __init__(self, abort_key: Key = Key.shift_r):
+    def __init__(self, abort_key: KeyCode = Key.shift_r):
         self.controller = Controller()
         self.press = Event()
         self.released: Key | KeyCode | None = None
@@ -48,12 +48,12 @@ class Keyboard:
             self.listener.join()
             self.listener = None
 
-    def wait(self, key: Key = Key.shift):
+    def wait(self, key: KeyCode = Key.shift):
         if self.listener is None or not self.listener.is_alive():
             raise RuntimeError("KeyMonitor is not running.")
         time.sleep(0.01)  # Flush previous tap events
         self.released = None
-        print(f"Tap {key.name} to continue")
+        print(f"Tap {key} to continue")
         while key != self.released and not self.aborted:
             self.press.wait()
             self.press.clear()

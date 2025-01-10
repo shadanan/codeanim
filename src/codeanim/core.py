@@ -2,7 +2,7 @@ import time
 from typing import Callable, Concatenate, ParamSpec, TypeVar
 
 import pyperclip
-from pynput.keyboard import Key
+from pynput.keyboard import Key, KeyCode
 from pynput.mouse import Button, Controller
 
 from . import shell
@@ -141,7 +141,9 @@ def scroll(ca: CodeAnim, dx: int, dy: int):
 
 
 @CodeAnim.cmd
-def tap(ca: CodeAnim, key: str | Key, *, modifiers: list[Key] = [], repeat: int = 1):
+def tap(
+    ca: CodeAnim, key: str | KeyCode, *, modifiers: list[KeyCode] = [], repeat: int = 1
+):
     for modifier in modifiers:
         ca.keyboard.controller.press(modifier)
     for _ in range(repeat):

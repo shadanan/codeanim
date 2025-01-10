@@ -10,7 +10,7 @@ from pynput.mouse import Button  # noqa: F401
 from . import chrome, vscode  # noqa: F401
 from .core import codeanim
 from .interpolators import Sigmoid, Spring  # noqa: F401
-from .markdown import parse
+from .parser import CodeAnimBlocks
 
 # Public API
 backspace = codeanim.backspace
@@ -35,12 +35,13 @@ class VersionAction(argparse.Action):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "markdown",
-        help="The markdown file containing the animation commands",
+        "script",
+        help="The markdown or python file containing the animation commands",
     )
     parser.add_argument(
         "--labels",
         nargs="+",
+        type=set,
         default=None,
         help="The list of labeled CodeAnim blocks to execute",
     )
@@ -89,17 +90,18 @@ def main():
     delay.set(end=args.end_delay, tap=args.tap_delay)
     codeanim.keyboard.set_abort_key(args.abort_key)
 
+    verbose: bool = args.verbose
+    live: bool = args.live
+    blocks = CodeAnimBlocks.parse_file(args.script)
+
     with codeanim:
-        expressions = parse(
-            args.markdown,
-            live=args.live,
-            labels=args.labels,
-            start_label=args.start_label,
-        )
-        for expression in expressions:
-            if args.verbose:
-                print(expression)
-            exec(expression)
+        for block in blocks.filter(labels=args.labels, start_label=args.start_label):
+            if live:
+                wait()
+            for expression in block.expressions():
+                if verbose:
+                    print(expression)
+                exec(expression)
 
 
 if __name__ == "__main__":

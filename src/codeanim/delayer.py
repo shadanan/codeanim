@@ -2,13 +2,13 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 
-from pynput.keyboard import Key
+from pynput.keyboard import KeyCode
 
 
 @dataclass
 class Delayer:
     tap: float = 0.02
-    keys: dict[str | Key, float] = field(default_factory=dict)
+    keys: dict[str | KeyCode, float] = field(default_factory=dict)
     end: float = 1
 
     def set(
@@ -16,7 +16,7 @@ class Delayer:
         end: float | None = None,
         *,
         tap: float | None = None,
-        keys: dict[str | Key, float] | None = None,
+        keys: dict[str | KeyCode, float] | None = None,
     ):
         prev_end, self.end = self.end, self.end if end is None else end
         prev_tap, self.tap = self.tap, self.tap if tap is None else tap
@@ -33,7 +33,7 @@ class Delayer:
         end: float | None = None,
         *,
         tap: float | None = None,
-        keys: dict[str | Key, float] | None = None,
+        keys: dict[str | KeyCode, float] | None = None,
     ):
         prev_end, prev_tap, prev_keys = self.set(end=end, tap=tap, keys=keys)
         yield
