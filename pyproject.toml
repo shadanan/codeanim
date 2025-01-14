@@ -1,6 +1,6 @@
 [project]
 name = "codeanim"
-version = "0.0.30"
+version = "0.0.31"
 description = "A tool that automates presentation of software demos."
 authors = [{ name = "Shad Sharma", email = "shadanan@gmail.com" }]
 readme = "README.md"

@@ -4,10 +4,10 @@ CodeAnim is a tool to help you animate VS Code. It provides methods that enable 
 
 ## Installation
 
-We recommend install CodeAnim using [pipx](https://pipx.pypa.io/).
+We recommend install CodeAnim using [uv](https://docs.astral.sh/uv/).
 
 ```shell
-pipx install codeanim
+uv tool install codeanim --python 3.12
 ```
 
 ## Usage
@@ -41,7 +41,7 @@ vscode.run()
 To execute the CodeAnim commands in the Markdown file:
 
 ```shell
-codeanim codeanim-markdown-demo.md
+codeanim run codeanim-markdown-demo.md
 ```
 
 ### Flags
@@ -50,14 +50,6 @@ codeanim codeanim-markdown-demo.md
 - Set `--live` to enable presentation mode. In this mode, a wait() will be injected after every codeanim fence.
 
 ## Development
-
-We use Poetry for development.
-
-```shell
-git clone https://github.com/shadanan/codeanim.git
-cd codeanim
-poetry install
-```
 
 ### Formatting
 

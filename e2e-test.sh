@@ -1,4 +1,4 @@
 #!/bin/bash
 rm -rf demo
 mkdir demo
-PYTHONPATH=. codeanim tests/e2e.md $@
+PYTHONPATH=src codeanim run tests/e2e.md $@
