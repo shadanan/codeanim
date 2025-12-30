@@ -23,7 +23,7 @@ jobs:
       if: ${{ needs.release.outputs.release_created }}
       steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v5
+      - uses: astral-sh/setup-uv@v7
       - run: uv build
       - run: uv publish
         env:
