@@ -3,12 +3,13 @@ import argparse
 import os
 from functools import partial
 from importlib.metadata import version
+from typing import Any, Sequence
 
 from pynput.keyboard import Key
 
-from . import chrome, vscode  # noqa: F401
+from . import chrome, vscode
 from .core import codeanim
-from .interpolators import Sigmoid, Spring  # noqa: F401
+from .interpolators import Sigmoid, Spring
 from .parser import CodeAnimBlocks
 from .recorder import Recorder
 
@@ -25,9 +26,33 @@ tap = codeanim.tap
 wait = codeanim.wait
 write = codeanim.write
 
+__all__ = [
+    "Sigmoid",
+    "Spring",
+    "backspace",
+    "click",
+    "delay",
+    "drag",
+    "move",
+    "paste",
+    "pause",
+    "scroll",
+    "tap",
+    "wait",
+    "write",
+    "chrome",
+    "vscode",
+]
+
 
 class VersionAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
+    ):
         print(version("codeanim"))
         parser.exit()
 

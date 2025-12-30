@@ -1,5 +1,5 @@
 import time
-from typing import Callable, Concatenate, ParamSpec, TypeVar
+from typing import Any, Callable, Concatenate, ParamSpec, TypeVar
 
 import pyperclip
 from pynput.keyboard import Key, KeyCode
@@ -31,7 +31,7 @@ class CodeAnim:
         self.wait = self.keyboard.wait
         self.write = write
 
-        self._call_stack = []
+        self._call_stack: list[str] = []
 
     def __enter__(self):
         self.start()
@@ -40,7 +40,7 @@ class CodeAnim:
     def start(self):
         self.keyboard.start()
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: tuple[Any]):
         self.stop()
 
     def stop(self):
@@ -142,7 +142,11 @@ def scroll(ca: CodeAnim, dx: int, dy: int):
 
 @CodeAnim.cmd
 def tap(
-    ca: CodeAnim, key: str | KeyCode, *, modifiers: list[KeyCode] = [], repeat: int = 1
+    ca: CodeAnim,
+    key: str | Key | KeyCode,
+    *,
+    modifiers: list[Key] = [],
+    repeat: int = 1,
 ):
     for modifier in modifiers:
         ca.keyboard.controller.press(modifier)

@@ -22,7 +22,7 @@ class Recorder:
     keyboard_listener: keyboard.Listener | None = None
     mouse_event: tuple[int, int] | None = None
 
-    keys: set[Key] = field(default_factory=set)
+    keys: set[Key] = field(default_factory=set[Key])
 
     def handle_press(self, key: Key | KeyCode | None):
         if self.verbose:
@@ -92,7 +92,7 @@ class Recorder:
         self.keyboard_listener.start()
         sleep(0.01)
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: tuple[Any]):
         self.stop()
 
     def stop(self):
