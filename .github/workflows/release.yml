@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
   pull-requests: write
 
 jobs:
@@ -17,12 +18,14 @@ jobs:
         with:
           release-type: python
           branch: main
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
   publish:
       needs: [release]
       runs-on: ubuntu-latest
       if: ${{ needs.release.outputs.release_created }}
       steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v7
       - run: uv build
       - run: uv publish
