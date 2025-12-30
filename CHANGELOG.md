@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/shadanan/codeanim/compare/v0.1.0...v0.1.1) (2025-12-30)
+
+
+### Bug Fixes
+
+* release-please configuration ([#47](https://github.com/shadanan/codeanim/issues/47)) ([40880d3](https://github.com/shadanan/codeanim/commit/40880d371b631e1ceb54ee1369e4df23f2750a0a))
+
 ## 0.1.0 (2025-12-30)
 
 
