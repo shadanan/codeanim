@@ -1,11 +1,12 @@
 import time
 from threading import Event
+from typing import Any
 
 from pynput.keyboard import Controller, Key, KeyCode, Listener
 
 
 class Keyboard:
-    def __init__(self, abort_key: KeyCode = Key.shift_r):
+    def __init__(self, abort_key: Key | KeyCode = Key.shift_r):
         self.controller = Controller()
         self.press = Event()
         self.released: Key | KeyCode | None = None
@@ -39,7 +40,7 @@ class Keyboard:
         self.listener.start()
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: tuple[Any]):
         self.stop()
 
     def stop(self):
@@ -48,7 +49,7 @@ class Keyboard:
             self.listener.join()
             self.listener = None
 
-    def wait(self, key: KeyCode = Key.shift):
+    def wait(self, key: Key | KeyCode = Key.shift):
         if self.listener is None or not self.listener.is_alive():
             raise RuntimeError("KeyMonitor is not running.")
         time.sleep(0.01)  # Flush previous tap events

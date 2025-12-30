@@ -63,7 +63,9 @@ class CodeAnimBlocks:
 
 def markdown(lines: list[str]) -> Generator[CodeAnimBlock, Any, None]:
     is_codeanim = False
-    labels, code, prelude = set(), [], False
+    labels: set[str] = set()
+    code: list[str] = []
+    prelude: bool = False
     for line in lines:
         if line.startswith("```python"):
             tokens = line.strip().split()
@@ -82,7 +84,9 @@ def markdown(lines: list[str]) -> Generator[CodeAnimBlock, Any, None]:
 
 
 def python(lines: list[str]) -> Generator[CodeAnimBlock, Any, None]:
-    labels, code, prelude = set(), [], True
+    labels: set[str] = set()
+    code: list[str] = []
+    prelude: bool = True
     for line in lines:
         if match := re.match(r"^#\s*%{2,}(.*)", line):
             if len(code) > 0:

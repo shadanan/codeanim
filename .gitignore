@@ -9,3 +9,6 @@ dist
 
 # E2E test artifacts
 demo
+
+# MacOS
+.DS_Store
