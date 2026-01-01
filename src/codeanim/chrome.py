@@ -5,84 +5,121 @@ from .core import CodeAnim
 APP_NAME = "Google Chrome"
 
 
-@CodeAnim.cmd
-def activate(ca: CodeAnim):
-    ca.shell.activate(APP_NAME)
+class Chrome:
+    """Chrome automation commands."""
 
+    def __init__(self, ca: CodeAnim):
+        self.ca = ca
 
-@CodeAnim.cmd
-def resize(ca: CodeAnim, position: tuple[int, int], size: tuple[int, int]):
-    ca.shell.resize(APP_NAME, position, size)
+    def activate(self):
+        @self.ca.register
+        def _activate():
+            self.ca.shell.activate(APP_NAME)
 
+        return _activate()
 
-@CodeAnim.cmd
-def navigate(ca: CodeAnim, url: str):
-    ca.tap("l", modifiers=[Key.cmd])
-    ca.write(url)
-    ca.tap(Key.enter)
+    def resize(self, position: tuple[int, int], size: tuple[int, int]):
+        @self.ca.register
+        def _resize():
+            self.ca.shell.resize(APP_NAME, position, size)
 
+        return _resize()
 
-@CodeAnim.cmd
-def back(ca: CodeAnim):
-    ca.tap(Key.left, modifiers=[Key.cmd])
+    def navigate(self, url: str):
+        @self.ca.register
+        def _navigate():
+            self.ca.tap("l", modifiers=[Key.cmd])
+            self.ca.write(url)
+            self.ca.tap(Key.enter)
 
+        return _navigate()
 
-@CodeAnim.cmd
-def forward(ca: CodeAnim):
-    ca.tap(Key.right, modifiers=[Key.cmd])
+    def back(self):
+        @self.ca.register
+        def _back():
+            self.ca.tap(Key.left, modifiers=[Key.cmd])
 
+        return _back()
 
-@CodeAnim.cmd
-def new_tab(ca: CodeAnim):
-    ca.tap("t", modifiers=[Key.cmd])
-    ca.tap(Key.esc)
+    def forward(self):
+        @self.ca.register
+        def _forward():
+            self.ca.tap(Key.right, modifiers=[Key.cmd])
 
+        return _forward()
 
-@CodeAnim.cmd
-def previous_tab(ca: CodeAnim, times: int = 1):
-    for _ in range(times):
-        ca.tap("{", modifiers=[Key.cmd, Key.shift])
+    def new_tab(self):
+        @self.ca.register
+        def _new_tab():
+            self.ca.tap("t", modifiers=[Key.cmd])
+            self.ca.tap(Key.esc)
 
+        return _new_tab()
 
-@CodeAnim.cmd
-def next_tab(ca: CodeAnim, times: int = 1):
-    for _ in range(times):
-        ca.tap("}", modifiers=[Key.cmd, Key.shift])
+    def previous_tab(self, times: int = 1):
+        @self.ca.register
+        def _previous_tab():
+            for _ in range(times):
+                self.ca.tap("{", modifiers=[Key.cmd, Key.shift])
 
+        return _previous_tab()
 
-@CodeAnim.cmd
-def close_tab(ca: CodeAnim):
-    ca.tap("w", modifiers=[Key.cmd])
+    def next_tab(self, times: int = 1):
+        @self.ca.register
+        def _next_tab():
+            for _ in range(times):
+                self.ca.tap("}", modifiers=[Key.cmd, Key.shift])
 
+        return _next_tab()
 
-@CodeAnim.cmd
-def new_window(ca: CodeAnim):
-    ca.tap("n", modifiers=[Key.cmd])
-    ca.tap(Key.esc)
+    def close_tab(self):
+        @self.ca.register
+        def _close_tab():
+            self.ca.tap("w", modifiers=[Key.cmd])
 
+        return _close_tab()
 
-@CodeAnim.cmd
-def close_window(ca: CodeAnim):
-    ca.tap("w", modifiers=[Key.cmd, Key.shift])
+    def new_window(self):
+        @self.ca.register
+        def _new_window():
+            self.ca.tap("n", modifiers=[Key.cmd])
+            self.ca.tap(Key.esc)
 
+        return _new_window()
 
-@CodeAnim.cmd
-def refresh(ca: CodeAnim):
-    ca.tap("r", modifiers=[Key.cmd])
+    def close_window(self):
+        @self.ca.register
+        def _close_window():
+            self.ca.tap("w", modifiers=[Key.cmd, Key.shift])
 
+        return _close_window()
 
-@CodeAnim.cmd
-def toggle_devtools(ca: CodeAnim):
-    ca.tap("i", modifiers=[Key.cmd, Key.alt])
+    def refresh(self):
+        @self.ca.register
+        def _refresh():
+            self.ca.tap("r", modifiers=[Key.cmd])
 
+        return _refresh()
 
-@CodeAnim.cmd
-def prev_devtools_panel(ca: CodeAnim, times: int = 1):
-    for _ in range(times):
-        ca.tap("[", modifiers=[Key.cmd])
+    def toggle_devtools(self):
+        @self.ca.register
+        def _toggle_devtools():
+            self.ca.tap("i", modifiers=[Key.cmd, Key.alt])
 
+        return _toggle_devtools()
 
-@CodeAnim.cmd
-def next_devtools_panel(ca: CodeAnim, times: int = 1):
-    for _ in range(times):
-        ca.tap("]", modifiers=[Key.cmd])
+    def prev_devtools_panel(self, times: int = 1):
+        @self.ca.register
+        def _prev_devtools_panel():
+            for _ in range(times):
+                self.ca.tap("[", modifiers=[Key.cmd])
+
+        return _prev_devtools_panel()
+
+    def next_devtools_panel(self, times: int = 1):
+        @self.ca.register
+        def _next_devtools_panel():
+            for _ in range(times):
+                self.ca.tap("]", modifiers=[Key.cmd])
+
+        return _next_devtools_panel()

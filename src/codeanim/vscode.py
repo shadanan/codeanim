@@ -5,129 +5,180 @@ from .core import CodeAnim
 APP_NAME = "Code"
 
 
-@CodeAnim.cmd
-def open(ca: CodeAnim, path: str):
-    if path.endswith(".code-workspace"):
-        ca.shell.open(path)
-    else:
-        ca.shell.code(path)
+class VSCode:
+    """VS Code automation commands."""
 
+    def __init__(self, ca: CodeAnim):
+        self.ca = ca
 
-@CodeAnim.cmd
-def activate(ca: CodeAnim):
-    ca.shell.activate(APP_NAME)
+    def open(self, path: str):
+        @self.ca.register
+        def _open():
+            if path.endswith(".code-workspace"):
+                self.ca.shell.open(path)
+            else:
+                self.ca.shell.code(path)
 
+        return _open()
 
-@CodeAnim.cmd
-def resize(ca: CodeAnim, position: tuple[int, int], size: tuple[int, int]):
-    ca.shell.resize(APP_NAME, position, size)
+    def activate(self):
+        @self.ca.register
+        def _activate():
+            self.ca.shell.activate(APP_NAME)
 
+        return _activate()
 
-@CodeAnim.cmd
-def palette(ca: CodeAnim, cmd: str):
-    ca.tap("p", modifiers=[Key.cmd])
-    ca.write(cmd)
-    ca.tap(Key.enter)
+    def resize(self, position: tuple[int, int], size: tuple[int, int]):
+        @self.ca.register
+        def _resize():
+            self.ca.shell.resize(APP_NAME, position, size)
 
+        return _resize()
 
-@CodeAnim.cmd
-def newline(ca: CodeAnim, line: int = 0, *, above: bool = False):
-    if line > 0:
-        jump(line)
-        ca.tap(Key.enter, modifiers=[Key.cmd, Key.shift])
-    else:
-        ca.tap(Key.enter, modifiers=[Key.cmd, Key.shift] if above else [Key.cmd])
+    def palette(self, cmd: str):
+        @self.ca.register
+        def _palette():
+            self.ca.tap("p", modifiers=[Key.cmd])
+            self.ca.write(cmd)
+            self.ca.tap(Key.enter)
 
+        return _palette()
 
-@CodeAnim.cmd
-def jump(ca: CodeAnim, line: int, col: int = 1):
-    ca.tap("p", modifiers=[Key.cmd])
-    ca.paste(f":{line},{col}", paste_delay=0)
-    ca.tap(Key.enter)
+    def newline(self, line: int = 0, *, above: bool = False):
+        @self.ca.register
+        def _newline():
+            if line > 0:
+                self.jump(line)
+                self.ca.tap(Key.enter, modifiers=[Key.cmd, Key.shift])
+            else:
+                self.ca.tap(
+                    Key.enter, modifiers=[Key.cmd, Key.shift] if above else [Key.cmd]
+                )
 
+        return _newline()
 
-@CodeAnim.cmd
-def move(ca: CodeAnim, *, lines: int = 0, cols: int = 0, select: bool = False):
-    if lines < 0:
-        for _ in range(-lines):
-            ca.tap(Key.up, modifiers=[Key.shift] if select else [])
-    elif lines > 0:
-        for _ in range(lines):
-            ca.tap(Key.down, modifiers=[Key.shift] if select else [])
-    if cols < 0:
-        for _ in range(-cols):
-            ca.tap(Key.left, modifiers=[Key.shift] if select else [])
-    elif cols > 0:
-        for _ in range(cols):
-            ca.tap(Key.right, modifiers=[Key.shift] if select else [])
+    def jump(self, line: int, col: int = 1):
+        @self.ca.register
+        def _jump():
+            self.ca.tap("p", modifiers=[Key.cmd])
+            self.ca.paste(f":{line},{col}", paste_delay=0)
+            self.ca.tap(Key.enter)
 
+        return _jump()
 
-@CodeAnim.cmd
-def end(ca: CodeAnim, *, select: bool = False):
-    ca.tap(Key.right, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd])
+    def move(self, *, lines: int = 0, cols: int = 0, select: bool = False):
+        @self.ca.register
+        def _move():
+            if lines < 0:
+                for _ in range(-lines):
+                    self.ca.tap(Key.up, modifiers=[Key.shift] if select else [])
+            elif lines > 0:
+                for _ in range(lines):
+                    self.ca.tap(Key.down, modifiers=[Key.shift] if select else [])
+            if cols < 0:
+                for _ in range(-cols):
+                    self.ca.tap(Key.left, modifiers=[Key.shift] if select else [])
+            elif cols > 0:
+                for _ in range(cols):
+                    self.ca.tap(Key.right, modifiers=[Key.shift] if select else [])
 
+        return _move()
 
-@CodeAnim.cmd
-def bottom(ca: CodeAnim, *, select: bool = False):
-    ca.tap(Key.down, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd])
+    def end(self, *, select: bool = False):
+        @self.ca.register
+        def _end():
+            self.ca.tap(
+                Key.right, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd]
+            )
 
+        return _end()
 
-@CodeAnim.cmd
-def new_file(ca: CodeAnim):
-    ca.tap("n", modifiers=[Key.cmd])
+    def bottom(self, *, select: bool = False):
+        @self.ca.register
+        def _bottom():
+            self.ca.tap(
+                Key.down, modifiers=[Key.cmd, Key.shift] if select else [Key.cmd]
+            )
 
+        return _bottom()
 
-@CodeAnim.cmd
-def save(ca: CodeAnim, file: str | None = None):
-    if file is None:
-        ca.tap("s", modifiers=[Key.cmd])
-    else:
-        ca.tap("s", modifiers=[Key.cmd, Key.shift])
-        ca.delay.pause(0.5)
-        ca.write(file)
-        ca.tap(Key.enter)
+    def new_file(self):
+        @self.ca.register
+        def _new_file():
+            self.ca.tap("n", modifiers=[Key.cmd])
 
+        return _new_file()
 
-@CodeAnim.cmd
-def focus(_, file: str):
-    palette(file)
+    def save(self, file: str | None = None):
+        @self.ca.register
+        def _save():
+            if file is None:
+                self.ca.tap("s", modifiers=[Key.cmd])
+            else:
+                self.ca.tap("s", modifiers=[Key.cmd, Key.shift])
+                self.ca.delay.pause(0.5)
+                self.ca.write(file)
+                self.ca.tap(Key.enter)
 
+        return _save()
 
-@CodeAnim.cmd
-def focus_editor(ca: CodeAnim):
-    ca.tap("1", modifiers=[Key.ctrl])
+    def focus(self, file: str):
+        @self.ca.register
+        def _focus():
+            self.palette(file)
 
+        return _focus()
 
-@CodeAnim.cmd
-def toggle_terminal(ca: CodeAnim):
-    ca.tap("`", modifiers=[Key.ctrl])
+    def focus_editor(self):
+        @self.ca.register
+        def _focus_editor():
+            self.ca.tap("1", modifiers=[Key.ctrl])
 
+        return _focus_editor()
 
-@CodeAnim.cmd
-def toggle_panel(ca: CodeAnim):
-    ca.tap("j", modifiers=[Key.cmd])
+    def toggle_terminal(self):
+        @self.ca.register
+        def _toggle_terminal():
+            self.ca.tap("`", modifiers=[Key.ctrl])
 
+        return _toggle_terminal()
 
-@CodeAnim.cmd
-def toggle_primary_sidebar(ca: CodeAnim):
-    ca.tap("b", modifiers=[Key.cmd])
+    def toggle_panel(self):
+        @self.ca.register
+        def _toggle_panel():
+            self.ca.tap("j", modifiers=[Key.cmd])
 
+        return _toggle_panel()
 
-@CodeAnim.cmd
-def clear_terminal(ca: CodeAnim):
-    toggle_terminal()
-    ca.tap("k", modifiers=[Key.cmd])
-    focus_editor()
+    def toggle_primary_sidebar(self):
+        @self.ca.register
+        def _toggle_primary_sidebar():
+            self.ca.tap("b", modifiers=[Key.cmd])
 
+        return _toggle_primary_sidebar()
 
-@CodeAnim.cmd
-def clear_editor(ca: CodeAnim):
-    ca.tap("a", modifiers=[Key.cmd])
-    ca.backspace()
+    def clear_terminal(self):
+        @self.ca.register
+        def _clear_terminal():
+            self.toggle_terminal()
+            self.ca.tap("k", modifiers=[Key.cmd])
+            self.focus_editor()
 
+        return _clear_terminal()
 
-@CodeAnim.cmd
-def clear_below(ca: CodeAnim, line: int):
-    jump(line)
-    ca.tap(Key.down, modifiers=[Key.cmd, Key.shift])
-    ca.backspace()
+    def clear_editor(self):
+        @self.ca.register
+        def _clear_editor():
+            self.ca.tap("a", modifiers=[Key.cmd])
+            self.ca.backspace()
+
+        return _clear_editor()
+
+    def clear_below(self, line: int):
+        @self.ca.register
+        def _clear_below():
+            self.jump(line)
+            self.ca.tap(Key.down, modifiers=[Key.cmd, Key.shift])
+            self.ca.backspace()
+
+        return _clear_below()

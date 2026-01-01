@@ -1,5 +1,5 @@
 import time
-from typing import Any, Callable, Concatenate, ParamSpec, TypeVar
+from typing import Any, Callable, ParamSpec, TypeVar
 
 import pyperclip
 from pynput.keyboard import Key, KeyCode
@@ -20,18 +20,8 @@ class CodeAnim:
         self.keyboard = Keyboard()
         self.mouse = Controller()
         self.shell = shell
-
-        self.backspace = backspace
-        self.click = click
-        self.drag = drag
-        self.move = move
-        self.paste = paste
-        self.scroll = scroll
-        self.tap = tap
-        self.wait = self.keyboard.wait
-        self.write = write
-
         self._call_stack: list[str] = []
+        self.wait = self.keyboard.wait
 
     def __enter__(self):
         self.start()
@@ -46,134 +36,143 @@ class CodeAnim:
     def stop(self):
         self.keyboard.stop()
 
-    @staticmethod
-    def cmd(func: Callable[Concatenate["CodeAnim", P], R]) -> Callable[P, R]:
-        def codeanim_func(
+    def register(self, func: Callable[P, R]) -> Callable[P, R]:
+        def wrapper(
             *args: P.args,
             **kwargs: P.kwargs,
         ) -> R:
-            if codeanim.keyboard.aborted:
+            if self.keyboard.aborted:
                 raise Exception("aborted")
-            codeanim._call_stack.append(func.__name__)
-            result = func(codeanim, *args, **kwargs)
-            codeanim._call_stack.pop()
-            if len(codeanim._call_stack) == 0:
-                codeanim.delay.pause()
+            self._call_stack.append(func.__name__)
+            result = func(*args, **kwargs)
+            self._call_stack.pop()
+            if len(self._call_stack) == 0:
+                self.delay.pause()
             return result
 
-        return codeanim_func
+        return wrapper
 
+    def backspace(self, num: int = 1):
+        @self.register
+        def _backspace():
+            for _ in range(num):
+                self.tap(Key.backspace)
 
-@CodeAnim.cmd
-def backspace(ca: CodeAnim, num: int = 1):
-    for _ in range(num):
-        ca.tap(Key.backspace)
+        return _backspace()
 
+    def click(
+        self,
+        pos: tuple[int, int] | None = None,
+        button: Button = Button.left,
+        count: int = 1,
+        *,
+        start: tuple[int, int] | None = None,
+        interpolator: Interpolator = Spring(),
+    ):
+        @self.register
+        def _click():
+            if pos is not None:
+                self.move(pos, start=start, interpolator=interpolator)
+            self.mouse.click(button, count)
 
-@CodeAnim.cmd
-def click(
-    ca: CodeAnim,
-    pos: tuple[int, int] | None = None,
-    button: Button = Button.left,
-    count: int = 1,
-    *,
-    start: tuple[int, int] | None = None,
-    interpolator: Interpolator = Spring(),
-):
-    if pos is not None:
-        move(pos, start=start, interpolator=interpolator)
-    ca.mouse.click(button, count)
+        return _click()
 
+    def drag(
+        self,
+        start: tuple[int, int],
+        end: tuple[int, int],
+        button: Button = Button.left,
+        *,
+        interpolator: Interpolator = Spring(),
+    ):
+        @self.register
+        def _drag():
+            self.move(start, interpolator=interpolator)
+            self.mouse.press(button)
+            self.move(end, interpolator=interpolator)
+            self.mouse.release(button)
 
-@CodeAnim.cmd
-def drag(
-    ca: CodeAnim,
-    start: tuple[int, int],
-    end: tuple[int, int],
-    button: Button = Button.left,
-    *,
-    interpolator: Interpolator = Spring(),
-):
-    move(start, interpolator=interpolator)
-    ca.mouse.press(button)
-    move(end, interpolator=interpolator)
-    ca.mouse.release(button)
+        return _drag()
 
+    def move(
+        self,
+        end: tuple[int, int],
+        *,
+        start: tuple[int, int] | None = None,
+        steps: int = 1000,
+        step_size: float = 0.01,
+        delay: float = 0.01,
+        interpolator: Interpolator = Spring(),
+    ):
+        @self.register
+        def _move():
+            nonlocal start
+            if start is None:
+                start = self.mouse.position
 
-@CodeAnim.cmd
-def move(
-    ca: CodeAnim,
-    end: tuple[int, int],
-    *,
-    start: tuple[int, int] | None = None,
-    steps: int = 1000,
-    step_size: float = 0.01,
-    delay: float = 0.01,
-    interpolator: Interpolator = Spring(),
-):
-    if start is None:
-        start = ca.mouse.position
+            delta = end[0] - start[0], end[1] - start[1]
 
-    delta = end[0] - start[0], end[1] - start[1]
+            for step in range(steps):
+                pt, vt = interpolator(step * step_size)
+                if abs(1 - pt) < 0.001 and vt < 0.01:
+                    break
+                self.mouse.position = (
+                    round(start[0] + delta[0] * pt),
+                    round(start[1] + delta[1] * pt),
+                )
+                time.sleep(delay)
+            self.mouse.position = end
 
-    for step in range(steps):
-        pt, vt = interpolator(step * step_size)
-        if done(pt, vt):
-            break
-        ca.mouse.position = (
-            round(start[0] + delta[0] * pt),
-            round(start[1] + delta[1] * pt),
-        )
-        time.sleep(delay)
-    ca.mouse.position = end
+        return _move()
 
+    def paste(self, text: str, *, paste_delay: float = 0.5):
+        @self.register
+        def _paste():
+            pyperclip.copy(text)
+            self.tap("v", modifiers=[Key.cmd])
+            time.sleep(paste_delay)  # Need to wait for the paste to finish
 
-@CodeAnim.cmd
-def paste(ca: CodeAnim, text: str, *, paste_delay: float = 0.5):
-    pyperclip.copy(text)
-    ca.tap("v", modifiers=[Key.cmd])
-    time.sleep(paste_delay)  # Need to wait for the paste to finish
+        return _paste()
 
+    def scroll(self, dx: int, dy: int):
+        @self.register
+        def _scroll():
+            self.mouse.scroll(dx, dy)
 
-@CodeAnim.cmd
-def scroll(ca: CodeAnim, dx: int, dy: int):
-    ca.mouse.scroll(dx, dy)
+        return _scroll()
 
+    def tap(
+        self,
+        key: str | Key | KeyCode,
+        *,
+        modifiers: list[Key] = [],
+        repeat: int = 1,
+    ):
+        @self.register
+        def _tap():
+            for modifier in modifiers:
+                self.keyboard.controller.press(modifier)
+            for _ in range(repeat):
+                self.keyboard.controller.tap(key)
+                time.sleep(self.delay.keys.get(key, self.delay.tap))
+            for modifier in modifiers:
+                self.keyboard.controller.release(modifier)
 
-@CodeAnim.cmd
-def tap(
-    ca: CodeAnim,
-    key: str | Key | KeyCode,
-    *,
-    modifiers: list[Key] = [],
-    repeat: int = 1,
-):
-    for modifier in modifiers:
-        ca.keyboard.controller.press(modifier)
-    for _ in range(repeat):
-        ca.keyboard.controller.tap(key)
-        time.sleep(ca.delay.keys.get(key, ca.delay.tap))
-    for modifier in modifiers:
-        ca.keyboard.controller.release(modifier)
+        return _tap()
 
+    def write(self, text: str):
+        @self.register
+        def _write():
+            for char in text:
+                if char == "\n":
+                    self.tap(Key.enter)
+                elif char == "\t":
+                    self.tap(Key.tab)
+                elif char == "\b":
+                    self.tap(Key.backspace)
+                elif len(char.encode("utf-8")) != 1:
+                    self.paste(char)
+                else:
+                    self.tap(char)
 
-@CodeAnim.cmd
-def write(ca: CodeAnim, text: str):
-    for char in text:
-        if char == "\n":
-            ca.tap(Key.enter)
-        elif char == "\t":
-            ca.tap(Key.tab)
-        elif char == "\b":
-            ca.tap(Key.backspace)
-        elif len(char.encode("utf-8")) != 1:
-            ca.paste(char)
-        else:
-            ca.tap(char)
-
-
-def done(position: float, velocity: float) -> bool:
-    return abs(1 - position) < 0.001 and velocity < 0.01
-
-
-codeanim = CodeAnim()
+        return _write()
