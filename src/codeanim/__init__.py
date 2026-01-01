@@ -7,41 +7,17 @@ from typing import Any, Sequence
 
 from pynput.keyboard import Key
 
-from . import chrome, vscode
-from .core import codeanim
+from codeanim.chrome import Chrome
+from codeanim.vscode import VSCode
+
+from .core import CodeAnim
 from .interpolators import Sigmoid, Spring
 from .parser import CodeAnimBlocks
 from .recorder import Recorder
 
-# Public API
-backspace = codeanim.backspace
-click = codeanim.click
-delay = codeanim.delay
-drag = codeanim.drag
-move = codeanim.move
-paste = codeanim.paste
-pause = codeanim.delay.pause
-scroll = codeanim.scroll
-tap = codeanim.tap
-wait = codeanim.wait
-write = codeanim.write
-
 __all__ = [
     "Sigmoid",
     "Spring",
-    "backspace",
-    "click",
-    "delay",
-    "drag",
-    "move",
-    "paste",
-    "pause",
-    "scroll",
-    "tap",
-    "wait",
-    "write",
-    "chrome",
-    "vscode",
 ]
 
 
@@ -58,6 +34,22 @@ class VersionAction(argparse.Action):
 
 
 def run(args: argparse.Namespace):
+    codeanim = CodeAnim()
+    chrome = Chrome(codeanim)  # type: ignore # noqa: F841
+    vscode = VSCode(codeanim)  # type: ignore # noqa: F841
+
+    backspace = codeanim.backspace  # type: ignore # noqa: F841
+    click = codeanim.click  # type: ignore # noqa: F841
+    delay = codeanim.delay
+    drag = codeanim.drag  # type: ignore # noqa: F841
+    move = codeanim.move  # type: ignore # noqa: F841
+    paste = codeanim.paste  # type: ignore # noqa: F841
+    pause = codeanim.delay.pause  # type: ignore # noqa: F841
+    scroll = codeanim.scroll  # type: ignore # noqa: F841
+    tap = codeanim.tap  # type: ignore # noqa: F841
+    wait = codeanim.wait
+    write = codeanim.write  # type: ignore # noqa: F841
+
     delay.set(end=args.end_delay, tap=args.tap_delay)
     codeanim.keyboard.set_abort_key(args.abort_key)
 
