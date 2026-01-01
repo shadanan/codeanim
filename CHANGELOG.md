@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/shadanan/codeanim/compare/v0.2.1...v0.3.0) (2026-01-01)
+
+
+### Features
+
+* Rearchitect so that we don't depend on global codeanim ([#53](https://github.com/shadanan/codeanim/issues/53)) ([dce5735](https://github.com/shadanan/codeanim/commit/dce57359c11f3f2200b0f2615e4cce32ed5f93f9))
+
 ## [0.2.1](https://github.com/shadanan/codeanim/compare/v0.2.0...v0.2.1) (2025-12-31)
 
 
