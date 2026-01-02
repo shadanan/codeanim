@@ -7,7 +7,7 @@ CodeAnim is a tool to help you animate VS Code. It provides methods that enable 
 We recommend install CodeAnim using [uv](https://docs.astral.sh/uv/).
 
 ```shell
-uv tool install codeanim --python 3.12
+uv tool install codeanim
 ```
 
 ## Usage

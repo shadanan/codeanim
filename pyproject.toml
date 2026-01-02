@@ -16,3 +16,8 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = ["pytest>=8.3.4"]
+
+[tool.pytest.ini_options]
+markers = [
+  "integration: marks tests as integration tests requiring actual applications (deselect with '-m \"not integration\"')",
+]

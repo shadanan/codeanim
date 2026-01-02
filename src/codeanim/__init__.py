@@ -34,37 +34,40 @@ class VersionAction(argparse.Action):
 
 
 def run(args: argparse.Namespace):
-    codeanim = CodeAnim()
-    chrome = Chrome(codeanim)  # type: ignore # noqa: F841
-    vscode = VSCode(codeanim)  # type: ignore # noqa: F841
+    ca = CodeAnim()
 
-    backspace = codeanim.backspace  # type: ignore # noqa: F841
-    click = codeanim.click  # type: ignore # noqa: F841
-    delay = codeanim.delay
-    drag = codeanim.drag  # type: ignore # noqa: F841
-    move = codeanim.move  # type: ignore # noqa: F841
-    paste = codeanim.paste  # type: ignore # noqa: F841
-    pause = codeanim.delay.pause  # type: ignore # noqa: F841
-    scroll = codeanim.scroll  # type: ignore # noqa: F841
-    tap = codeanim.tap  # type: ignore # noqa: F841
-    wait = codeanim.wait
-    write = codeanim.write  # type: ignore # noqa: F841
-
-    delay.set(end=args.end_delay, tap=args.tap_delay)
-    codeanim.keyboard.set_abort_key(args.abort_key)
+    ca.delay.set(end=args.end_delay, tap=args.tap_delay)
+    ca.keyboard.set_abort_key(args.abort_key)
 
     verbose: bool = args.verbose
     live: bool = args.live
     blocks = CodeAnimBlocks.parse_file(args.script)
 
-    with codeanim:
+    with ca:
         for block in blocks.filter(labels=args.labels, start_label=args.start_label):
             if live:
-                wait()
+                ca.wait()
             for expression in block.expressions():
                 if verbose:
                     print(expression)
-                exec(expression)
+                exec(
+                    expression,
+                    locals={
+                        "chrome": Chrome(ca),
+                        "vscode": VSCode(ca),
+                        "backspace": ca.backspace,
+                        "click": ca.click,
+                        "delay": ca.delay,
+                        "drag": ca.drag,
+                        "move": ca.move,
+                        "paste": ca.paste,
+                        "pause": ca.pause,
+                        "scroll": ca.scroll,
+                        "tap": ca.tap,
+                        "wait": ca.wait,
+                        "write": ca.write,
+                    },
+                )
 
 
 def record(args: argparse.Namespace):
