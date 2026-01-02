@@ -21,6 +21,7 @@ class CodeAnim:
         self.mouse = Controller()
         self.shell = shell
         self._call_stack: list[str] = []
+        self.pause = self.delay.pause
         self.wait = self.keyboard.wait
 
     def __enter__(self):
