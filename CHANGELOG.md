@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1](https://github.com/shadanan/codeanim/compare/v0.3.0...v0.3.1) (2026-01-03)
+
+
+### Bug Fixes
+
+* move delayer tests to core ([#59](https://github.com/shadanan/codeanim/issues/59)) ([53aca1f](https://github.com/shadanan/codeanim/commit/53aca1f55ac277bf8cc6f0d437439c9b1fd8cd3d))
+
 ## [0.3.0](https://github.com/shadanan/codeanim/compare/v0.2.1...v0.3.0) (2026-01-01)
 
 
