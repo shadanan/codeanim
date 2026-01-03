@@ -213,6 +213,27 @@ def test_write_multibyte_character(ca: CodeAnim, pyperclip: MagicMock):
     pyperclip.copy.assert_called_with("😀")
 
 
+def test_write_delays(ca: CodeAnim, sleep: MagicMock):
+    with ca.delay(end=1.0, tap=0.02, keys={" ": 0.5}):
+        ca.write("hello world")
+    sleep.assert_has_calls(
+        [
+            call(0.02),
+            call(0.02),
+            call(0.02),
+            call(0.02),
+            call(0.02),
+            call(0.5),
+            call(0.02),
+            call(0.02),
+            call(0.02),
+            call(0.02),
+            call(0.02),
+            call(1.0),
+        ]
+    )
+
+
 def test_paste_copies_and_taps(ca: CodeAnim, keyboard: MagicMock, pyperclip: MagicMock):
     ca.paste("hello world")
 
@@ -235,3 +256,30 @@ def test_backspace_multiple(ca: CodeAnim, keyboard: MagicMock):
 def test_scroll(ca: CodeAnim, mouse: MagicMock):
     ca.scroll(0, -5)
     mouse.scroll.assert_called_once_with(0, -5)
+
+
+def test_pause_default(ca: CodeAnim, sleep: MagicMock):
+    ca.pause()
+    sleep.assert_called_once_with(1)
+
+
+def test_pause_delay_set(ca: CodeAnim, sleep: MagicMock):
+    ca.delay.set(end=2)
+    ca.pause()
+    sleep.assert_called_once_with(2)
+
+
+def test_pause_custom_duration(ca: CodeAnim, sleep: MagicMock):
+    ca.pause(2.5)
+    sleep.assert_called_once_with(2.5)
+
+
+def test_pause_zero_duration(ca: CodeAnim, sleep: MagicMock):
+    ca.pause(0)
+    sleep.assert_called_once_with(0)
+
+
+def test_pause_context_manager(ca: CodeAnim, sleep: MagicMock):
+    with ca.delay(end=2):
+        ca.pause()
+    sleep.assert_called_once_with(2)
