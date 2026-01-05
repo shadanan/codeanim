@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/shadanan/codeanim/compare/v0.3.1...v0.3.2) (2026-01-05)
+
+
+### Bug Fixes
+
+* public exports ([#61](https://github.com/shadanan/codeanim/issues/61)) ([9992369](https://github.com/shadanan/codeanim/commit/9992369422111068e2a0d719e9991bf78d99bb1a))
+
 ## [0.3.1](https://github.com/shadanan/codeanim/compare/v0.3.0...v0.3.1) (2026-01-03)
 
 
