@@ -16,6 +16,10 @@ from .parser import CodeAnimBlocks
 from .recorder import Recorder
 
 __all__ = [
+    "CodeAnim",
+    "Key",
+    "Chrome",
+    "VSCode",
     "Sigmoid",
     "Spring",
 ]
