@@ -24,7 +24,7 @@ jobs:
           app-id: 1855004
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
       - id: release
-        uses: googleapis/release-please-action@v4
+        uses: googleapis/release-please-action@v5
         with:
           release-type: python
           token: ${{ steps.app.outputs.token }}
@@ -36,7 +36,7 @@ jobs:
       name: codeanim-release
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v8.1.0
       - run: uv build
       - run: uv publish
         env:
