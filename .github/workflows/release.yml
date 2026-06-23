@@ -35,7 +35,7 @@ jobs:
     environment:
       name: codeanim-release
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v8.2.0
       - run: uv build
       - run: uv publish
