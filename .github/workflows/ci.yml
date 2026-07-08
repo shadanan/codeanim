@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: chartboost/ruff-action@v1
-      - uses: astral-sh/setup-uv@v8.2.0
+      - uses: astral-sh/setup-uv@v8.3.2
       - run: uv run pytest -m "not integration"
         env:
           PYNPUT_BACKEND: dummy
