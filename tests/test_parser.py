@@ -1,4 +1,5 @@
-from typing import Any, Generator
+from collections.abc import Generator
+from typing import Any
 
 from codeanim.parser import CodeAnimBlock, CodeAnimBlocks
 
@@ -10,7 +11,7 @@ COMMAND_2 = 'print("command-2")'
 FOOTER = 'print("footer")'
 
 
-def to_exprs(blocks: Generator[CodeAnimBlock, Any, None]) -> list[str]:
+def to_exprs(blocks: Generator[CodeAnimBlock, Any]) -> list[str]:
     return [expression for block in blocks for expression in block.expressions()]
 
 

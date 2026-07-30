@@ -92,7 +92,7 @@ class Recorder:
         self.keyboard_listener.start()
         sleep(0.01)
 
-    def __exit__(self, *args: tuple[Any]):
+    def __exit__(self, *args: object):
         self.stop()
 
     def stop(self):

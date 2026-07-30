@@ -1,6 +1,5 @@
 import time
 from threading import Event
-from typing import Any
 
 from pynput.keyboard import Controller, Key, KeyCode, Listener
 
@@ -22,7 +21,6 @@ class Keyboard:
         if key == self.abort_key:
             self.aborted = True
             print(f"Aborting because {key} was pressed...")
-        pass
 
     def handle_release(self, key: Key | KeyCode | None):
         self.released = key
@@ -40,7 +38,7 @@ class Keyboard:
         self.listener.start()
         return self
 
-    def __exit__(self, *args: tuple[Any]):
+    def __exit__(self, *args: object):
         self.stop()
 
     def stop(self):

@@ -1,5 +1,6 @@
 import time
-from typing import Any, Callable, ParamSpec, TypeVar
+from collections.abc import Callable
+from typing import ParamSpec, TypeVar
 
 import pyperclip
 from pynput.keyboard import Key, KeyCode
@@ -7,7 +8,8 @@ from pynput.mouse import Button, Controller
 
 from . import shell
 from .delayer import Delayer
-from .interpolators import Interpolator, Spring
+from .exceptions import AbortedError
+from .interpolators import DEFAULT_INTERPOLATOR, Interpolator
 from .keyboard import Keyboard
 
 R = TypeVar("R")
@@ -31,7 +33,7 @@ class CodeAnim:
     def start(self):
         self.keyboard.start()
 
-    def __exit__(self, *args: tuple[Any]):
+    def __exit__(self, *args: object):
         self.stop()
 
     def stop(self):
@@ -43,7 +45,7 @@ class CodeAnim:
             **kwargs: P.kwargs,
         ) -> R:
             if self.keyboard.aborted:
-                raise Exception("aborted")
+                raise AbortedError()
             self._call_stack.append(func.__name__)
             result = func(*args, **kwargs)
             self._call_stack.pop()
@@ -68,7 +70,7 @@ class CodeAnim:
         count: int = 1,
         *,
         start: tuple[int, int] | None = None,
-        interpolator: Interpolator = Spring(),
+        interpolator: Interpolator = DEFAULT_INTERPOLATOR,
     ):
         @self.register
         def _click():
@@ -84,7 +86,7 @@ class CodeAnim:
         end: tuple[int, int],
         button: Button = Button.left,
         *,
-        interpolator: Interpolator = Spring(),
+        interpolator: Interpolator = DEFAULT_INTERPOLATOR,
     ):
         @self.register
         def _drag():
@@ -103,7 +105,7 @@ class CodeAnim:
         steps: int = 1000,
         step_size: float = 0.01,
         delay: float = 0.01,
-        interpolator: Interpolator = Spring(),
+        interpolator: Interpolator = DEFAULT_INTERPOLATOR,
     ):
         @self.register
         def _move():
@@ -146,7 +148,7 @@ class CodeAnim:
         self,
         key: str | Key | KeyCode,
         *,
-        modifiers: list[Key] = [],
+        modifiers: list[Key] = [],  # noqa: B006
         repeat: int = 1,
     ):
         @self.register

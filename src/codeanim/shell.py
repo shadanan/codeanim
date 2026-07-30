@@ -1,6 +1,8 @@
 import os
 import subprocess
 
+from .exceptions import CodeAnimError
+
 
 def expand(path: str) -> str:
     return os.path.expandvars(os.path.expanduser(path))
@@ -9,14 +11,14 @@ def expand(path: str) -> str:
 def open(path: str):
     path = expand(path)
     if not os.path.exists(path):
-        raise Exception(f"{path} does not exist")
+        raise CodeAnimError(f"{path} does not exist")
     return subprocess.check_output(["open", path])
 
 
 def code(path: str):
     path = expand(path)
     if not os.path.exists(path):
-        raise Exception(f"{path} does not exist")
+        raise CodeAnimError(f"{path} does not exist")
     return subprocess.check_output(["code", path])
 
 

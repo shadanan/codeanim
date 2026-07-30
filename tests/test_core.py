@@ -8,6 +8,7 @@ from pynput.mouse import Button
 from pytest_mock import MockerFixture
 
 from codeanim.core import CodeAnim
+from codeanim.exceptions import AbortedError
 from codeanim.interpolators import Sigmoid
 
 
@@ -92,7 +93,7 @@ def test_registered_command_checks_abort(ca: CodeAnim):
 
     ca.keyboard.aborted = True
 
-    with pytest.raises(Exception, match="aborted"):
+    with pytest.raises(AbortedError):
         registered_command()
 
 
