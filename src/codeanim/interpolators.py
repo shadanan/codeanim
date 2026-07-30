@@ -26,3 +26,6 @@ class Spring(Interpolator):
         exp = math.exp(-self.gamma * t)
         cos, sin = math.cos(self.omega * t), math.sin(self.omega * t)
         return 1 - exp * cos, abs(exp * (self.gamma * cos + self.omega * sin))
+
+
+DEFAULT_INTERPOLATOR: Interpolator = Spring()

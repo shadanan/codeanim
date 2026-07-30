@@ -21,7 +21,7 @@ jobs:
       - id: app
         uses: actions/create-github-app-token@v3.2.0
         with:
-          app-id: 1855004
+          client-id: Iv23liXdlxbyAb7jyk9P
           private-key: ${{ secrets.RELEASER_PRIVATE_KEY }}
       - id: release
         uses: googleapis/release-please-action@v5

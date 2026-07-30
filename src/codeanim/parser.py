@@ -3,10 +3,13 @@ from __future__ import annotations
 import ast
 import io
 import re
+from collections.abc import Callable, Generator
 from dataclasses import dataclass
-from typing import Any, Callable, Generator
+from typing import Any
 
-type Parser = Callable[[list[str]], Generator[CodeAnimBlock, Any, None]]
+from .exceptions import CodeAnimError
+
+type Parser = Callable[[list[str]], Generator[CodeAnimBlock, Any]]
 
 
 @dataclass(frozen=True)
@@ -18,7 +21,7 @@ class CodeAnimBlock:
     def __contains__(self, labels: set[str]) -> bool:
         return len(labels & self.labels) > 0
 
-    def expressions(self) -> Generator[str, Any, None]:
+    def expressions(self) -> Generator[str, Any]:
         module = ast.parse("\n".join(self.code))
         for node in module.body:
             start = node.lineno - 1
@@ -32,7 +35,7 @@ class CodeAnimBlocks:
 
     def filter(
         self, *, labels: set[str] | None = None, start_label: str | None = None
-    ) -> Generator[CodeAnimBlock, Any, None]:
+    ) -> Generator[CodeAnimBlock, Any]:
         found_start_label = False
         for block in self.blocks:
             if start_label in block.labels:
@@ -58,10 +61,10 @@ class CodeAnimBlocks:
                 return CodeAnimBlocks.parse(fp, markdown)
             if path.endswith(".py"):
                 return CodeAnimBlocks.parse(fp, python)
-        raise Exception(f"Unknown script type: {path}")
+        raise CodeAnimError(f"Unknown script type: {path}")
 
 
-def markdown(lines: list[str]) -> Generator[CodeAnimBlock, Any, None]:
+def markdown(lines: list[str]) -> Generator[CodeAnimBlock, Any]:
     is_codeanim = False
     labels: set[str] = set()
     code: list[str] = []
@@ -83,7 +86,7 @@ def markdown(lines: list[str]) -> Generator[CodeAnimBlock, Any, None]:
             code.append(line)
 
 
-def python(lines: list[str]) -> Generator[CodeAnimBlock, Any, None]:
+def python(lines: list[str]) -> Generator[CodeAnimBlock, Any]:
     labels: set[str] = set()
     code: list[str] = []
     prelude: bool = True

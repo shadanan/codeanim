@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import argparse
 import os
+from collections.abc import Sequence
 from functools import partial
 from importlib.metadata import version
-from typing import Any, Sequence
+from typing import Any
 
 from pynput.keyboard import Key
 
@@ -16,12 +17,12 @@ from .parser import CodeAnimBlocks
 from .recorder import Recorder
 
 __all__ = [
+    "Chrome",
     "CodeAnim",
     "Key",
-    "Chrome",
-    "VSCode",
     "Sigmoid",
     "Spring",
+    "VSCode",
 ]
 
 
@@ -54,7 +55,7 @@ def run(args: argparse.Namespace):
             for expression in block.expressions():
                 if verbose:
                     print(expression)
-                exec(
+                exec(  # noqa: S102
                     expression,
                     locals={
                         "chrome": Chrome(ca),
